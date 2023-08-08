@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Dosis } from 'next/font/google'
+import { ClerkProvider } from '@clerk/nextjs'
 
 import { ToasterProvider } from '@/providers/toaster-provider';
 import { ModalProvider } from '@/providers/modal-provider';
@@ -18,12 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={font.className}>
-        <ModalProvider />
-        <ToasterProvider />
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={font.className}>
+          <ModalProvider />
+          <ToasterProvider />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
