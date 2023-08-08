@@ -2,7 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Dosis } from 'next/font/google'
 
-import { ToasterProvider } from '@/providers/toast-provider';
+import { ToasterProvider } from '@/providers/toaster-provider';
+import { ModalProvider } from '@/providers/modal-provider';
 
 const font = Dosis({ subsets: ['latin'] })
 
@@ -18,8 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ToasterProvider />
-      <body className={font.className}>{children}</body>
+      <body className={font.className}>
+        <ModalProvider />
+        <ToasterProvider />
+        {children}
+      </body>
     </html>
   )
 }
