@@ -39,7 +39,8 @@ model Game {
   date      DateTime
   playerId  String
   players   Player[]
+  results   Result[]
+  isOngoing Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Result    Result[]
 }
