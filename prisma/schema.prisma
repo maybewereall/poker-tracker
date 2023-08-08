@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Player {
+  id        String   @id @default(uuid())
+  name      String
+  results   Result[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Game      Game     @relation(fields: [gameId], references: [id])
+  gameId    String
+
+  @@index([gameId])
+}
+
+model Result {
+  id        String   @id @default(uuid())
+  player    Player   @relation(fields: [playerId], references: [id])
+  playerId  String
+  buyIn     Int
+  final     Int
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([playerId])
+  @@index([gameId])
+}
+
+model Game {
+  id        String   @id @default(uuid())
+  date      DateTime
+  playerId  String
+  players   Player[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Result    Result[]
+}
