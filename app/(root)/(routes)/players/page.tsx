@@ -11,7 +11,7 @@ export default function PlayerPage() {
   const playerModal = usePlayerModal();
   return (
     <Container>
-        <Button onClick={() => playerModal.onOpen()}><Plus size={16}/>Add new</Button>
+        <Button onClick={() => playerModal.onOpen()}><Plus size={16} className="mr-2"/>Add new</Button>
     </Container>
   )
 }

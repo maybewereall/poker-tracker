@@ -49,8 +49,8 @@ export const PlayerModal = () => {
 
     return (
         <Modal
-            title="Create Store"
-            description="Add a new store to manage products and categories"
+            title="Add Player"
+            description="Add a new player to the club"
             isOpen={playerModal.isOpen}
             onClose={playerModal.onClose}
         >
@@ -66,7 +66,7 @@ export const PlayerModal = () => {
                                     <FormControl>
                                         <Input
                                             disabled={loading}
-                                            placeholder="E-commerce"
+                                            placeholder="Full Name"
                                             {...field}
                                         />
                                     </FormControl>
@@ -74,9 +74,9 @@ export const PlayerModal = () => {
                                 </FormItem>
                             )}
                         />
-                        <div className="pt-6 space-x-2 flex items-center justify-end w-full">
+                        <div className="pt-6 space-x-2 flex items-center justify-between w-full">
                             <Button type="button" disabled={loading} variant={"outline"} onClick={playerModal.onClose}>Cancel</Button>
-                            <Button type="submit" disabled={loading}>Submit</Button>
+                            <Button type="submit" disabled={loading}>Add</Button>
                         </div>
                     </form>
                 </Form>
