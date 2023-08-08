@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Players {
+  player_id        Int                @id @default(autoincrement())
+  full_name        String
+  email            String
+  date_joined      DateTime
+  gameParticipants GameParticipants[]
+  playerStatistics PlayerStatistics?
+}
+
+model Games {
+  game_id          Int                @id @default(autoincrement())
+  game_date        DateTime
+  location         String
+  active           Boolean            @default(true)
+  gameParticipants GameParticipants[]
+  gameStatistics   GameStatistics[]
+}
+
+model GameParticipants {
+  participant_id  Int     @id @default(autoincrement())
+  game_id         Int
+  player_id       Int
+  cash_out_amount Int
+  buy_in          BuyIn[]
+  player          Players @relation(fields: [player_id], references: [player_id])
+  game            Games   @relation(fields: [game_id], references: [game_id])
+
+  @@index([player_id])
+  @@index([game_id])
+}
+
+model PlayerStatistics {
+  player_stats_id    Int     @id @default(autoincrement())
+  player_id          Int     @unique
+  total_games_played Int
+  total_buy_ins      Int
+  total_cash_outs    Int
+  player             Players @relation(fields: [player_id], references: [player_id])
+}
+
+model GameStatistics {
+  game_id   Int   @id @unique
+  buy_ins   Int
+  cash_outs Int
+  rake      Int
+  result    Int
+  game      Games @relation(fields: [game_id], references: [game_id])
+
+  @@index([game_id])
+}
+
+model BuyIn {
+  buy_in_id      Int              @id @default(autoincrement())
+  amount         Int
+  timestamp      DateTime         @default(now())
+  participant_id Int
+  participant    GameParticipants @relation(fields: [participant_id], references: [participant_id])
+
+  @@index([participant_id])
+}
