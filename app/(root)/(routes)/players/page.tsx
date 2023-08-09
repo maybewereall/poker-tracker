@@ -1,17 +1,30 @@
-"use client";
-import React from 'react';
-import { Plus } from "lucide-react";
+import format from "date-fns/format";
 
-import { Button } from "@/components/ui/button";
-import Container from "@/components/ui/container";
+import { PlayerColumn } from './components/columns';
+import PlayerClient from './components/client';
 
-import { usePlayerModal } from "@/hooks/use-player-modal";
+import prismadb from "@/lib/prismadb";
 
-export default function PlayerPage() {
-  const playerModal = usePlayerModal();
+
+export default async function PlayerPage() {
+  const players = await prismadb.player.findMany({
+    include: {
+      games: true
+    }
+  })
+  console.log({players});
+  const formattedPlayers: PlayerColumn[] = players.map((item, index) => ({
+    id: item.id,
+    games: item.games.length,
+    name: item.name,
+    // games: item.games.length,
+    createdAt: format(item.createdAt, "MMM do, yyyy")
+  }))
   return (
-    <Container>
-        <Button onClick={() => playerModal.onOpen()}><Plus size={16} className="mr-2"/>Add new</Button>
-    </Container>
+        <div className="flex-col w-full max-w-[800px]">
+            <div className="flex-1 space-y-4 p-8 pt-6">
+                <PlayerClient data={formattedPlayers}/>
+            </div>
+        </div>
   )
 }

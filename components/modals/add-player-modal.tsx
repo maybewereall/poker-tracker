@@ -38,8 +38,12 @@ export const PlayerModal = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setLoading(true);
-            const response = await axios.post('/api/stores', values);
-            window.location.assign(`/${response.data.id}`);
+            const response = await axios.post('/api/players', {
+                games: [],
+                results: [],
+                ...values
+            });
+            toast.success("Player added");
         } catch (error) {
             toast.error("Something went wrong.")
         } finally {

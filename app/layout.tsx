@@ -6,6 +6,8 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { ToasterProvider } from '@/providers/toaster-provider';
 import { ModalProvider } from '@/providers/modal-provider';
 
+import Container from '@/components/ui/container';
+
 const font = Dosis({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -24,7 +26,9 @@ export default function RootLayout({
         <body className={font.className}>
           <ModalProvider />
           <ToasterProvider />
-          {children}
+          <Container>
+            {children}
+          </Container>
         </body>
       </html>
     </ClerkProvider>

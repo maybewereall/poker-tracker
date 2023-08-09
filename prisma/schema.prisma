@@ -11,21 +11,20 @@ datasource db {
 model Player {
   id        String   @id @default(uuid())
   name      String
-  results   Result[]  @relation("PlayerToResult")
+  results   Result[] @relation("ResultToPlayer")
+  games     Game[]   @relation("PlayerToGame")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  games     Game[]   @relation("PlayerToGames")
-
 }
 
 model Result {
   id        String   @id @default(uuid())
-  player    Player   @relation("PlayerToResult", fields: [playerId], references: [id])
+  player    Player   @relation("ResultToPlayer", fields: [playerId], references: [id])
   playerId  String
   buyIn     Int
   final     Int
   gameId    String
-  game      Game     @relation(fields: [gameId], references: [id])
+  game      Game     @relation("ResultToGame", fields: [gameId], references: [id])
   createdAt DateTime @default(now())
 
   @@index([playerId])
@@ -35,10 +34,9 @@ model Result {
 model Game {
   id        String   @id @default(uuid())
   date      DateTime
-  playerId  String
-  players   Player[] @relation("PlayerToGames", fields: [playerId], references: [id])
-  results   Result[] 
-  isOngoing Boolean @default(true)
+  players   Player[] @relation("PlayerToGame")
+  results   Result[] @relation("ResultToGame")
+  isOngoing Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

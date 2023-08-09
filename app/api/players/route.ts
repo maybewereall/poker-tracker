@@ -1,7 +1,17 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-
+export async function GET(
+    req: Request
+) {
+    try {
+        const players = await prismadb.player.findMany();
+        return NextResponse.json(players);
+    } catch (error) {
+        console.log('[PLAYERS_POST]', error);
+        return new NextResponse("Internal error", {status: 500})
+    }
+}
 export async function POST(
     req: Request
 ) {
@@ -9,6 +19,7 @@ export async function POST(
         const { userId } = auth();
         const body = await req.json();
         const { name } = body;
+        console.log({name});
         if(!userId) {
             return new NextResponse("Unauthenticated", { status: 401 })
         }
@@ -18,14 +29,14 @@ export async function POST(
 
         const player = await prismadb.player.create({
             data: {
-                name,
+                name
             }
         })
 
-        return NextResponse.json(store);
+        return NextResponse.json(player);
 
     } catch (error) {
-        console.log('[STORES_POST]', error);
+        console.log('[PLAYERS_POST]', error);
         return new NextResponse("Internal error", {status: 500})
     }
 }
