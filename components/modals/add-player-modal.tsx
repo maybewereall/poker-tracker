@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "react-hot-toast";
 import { redirect } from "next/navigation";
- 
+
 const formSchema = z.object({
     full_name: z.string().min(1),
     email: z.string().min(5).email()

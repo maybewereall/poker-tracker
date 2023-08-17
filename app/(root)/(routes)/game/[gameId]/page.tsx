@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import NewGameForm from "./components/new-game-form";
+import NewGameForm from "../../components/new-game-form";
 
 import { useParams } from "next/navigation";
 

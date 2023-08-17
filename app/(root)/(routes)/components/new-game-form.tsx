@@ -46,7 +46,7 @@ export const NewGameForm: React.FC<NewGameFormProps> = ({ players }) => {
     const onSubmit = () => {
         console.log
     }
-    const form = useForm<z.infer<typeof FormSchema>>({
+    const form = useForm<NewGameFormValues>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
           items: [],

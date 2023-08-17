@@ -3,12 +3,16 @@
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { NewGameModal } from "@/components/modals/new-game-modal";
+import { Players } from "@prisma/client";
 
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [playerList, setPlayerList] = useState<Players[]>();
+  const [open, setOpen] = useState(false);
 
   const handleClick = async () => {
     setLoading(true)
@@ -21,7 +25,29 @@ export default function Home() {
       setLoading(false)
     }
   }
+  useEffect(() => {
+    async function fetchPlayers() {
+        try {
+            const response = await fetch(`/api/players`);
+            const data = await response.json();
+            setPlayerList(data);
+        } catch (error) {
+            console.log(error);        
+        }
+    }
+    fetchPlayers();
+    // console.log({players})
+}, []);
+
   return (
-      <Button onClick={handleClick} disabled={loading}>Start New Game</Button>
+      <>
+      <NewGameModal
+          isOpen={open}
+          onClose={() => {setOpen(false)}}
+          onConfirm={() => null}
+          players={playerList}
+      />
+      <Button onClick={() => setOpen(true)} disabled={loading}>Start New Game</Button>
+      </>
   )
 }
