@@ -29,7 +29,7 @@ const PlayerClient: React.FC<IPlayerClientProps> = ({
                 <Button onClick={() => playerModal.onOpen()}><Plus className="mr-2 h-4 w-4" />Add new</Button>
             </div>
             <Separator />
-            <DataTable columns={columns} data={data} searchKey="name" />
+            <DataTable columns={columns} data={data} searchKey="full_name" />
         </>
     );
 };

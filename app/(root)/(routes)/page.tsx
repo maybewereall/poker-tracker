@@ -14,7 +14,7 @@ export default function Home() {
     setLoading(true)
     try {
       const response = await axios.post("/api/game");
-      router.push(`/game/${response.data.id}`);
+      router.push(`/game/${response.data.game_id}`);
       setLoading(false)
     } catch (error) {
       toast.error('something went wrong');

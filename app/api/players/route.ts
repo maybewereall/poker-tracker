@@ -1,36 +1,44 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+
 export async function GET(
     req: Request
 ) {
     try {
-        const players = await prismadb.player.findMany();
-        return NextResponse.json(players);
+        const players = await prismadb.players.findMany();
+        if(players) {
+            return NextResponse.json(players);
+        } else {
+            return new NextResponse("Couldn't get players", {status: 404})
+        }
     } catch (error) {
         console.log('[PLAYERS_POST]', error);
         return new NextResponse("Internal error", {status: 500})
     }
 }
+
 export async function POST(
     req: Request
 ) {
     try {
         const { userId } = auth();
         const body = await req.json();
-        const { name } = body;
-        console.log({name});
+        const { full_name, email } = body;
+
         if(!userId) {
             return new NextResponse("Unauthenticated", { status: 401 })
         }
-        if (!name) {
-            return new NextResponse("name is required", { status: 400 })
-        }
 
-        const player = await prismadb.player.create({
+        if(!full_name) {
+            return new NextResponse("Username is required", { status: 402 })
+        }
+        const player = await prismadb.players.create({
             data: {
-                name
-            }
+                full_name,
+                email,
+                date_joined: new Date()
+            },
         })
 
         return NextResponse.json(player);

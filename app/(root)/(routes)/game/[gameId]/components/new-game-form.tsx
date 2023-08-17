@@ -24,12 +24,12 @@ import {
 
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { Player } from "@prisma/client";
+import { Players } from "@prisma/client";
 
 interface NewGameFormProps {
     players: {
-        id: string;
-        label: string;
+        player_id: string;
+        full_name: string;
     }[];
 }
 
@@ -69,31 +69,31 @@ export const NewGameForm: React.FC<NewGameFormProps> = ({ players }) => {
                             <div className="grid grid-cols-10 space-x-1 max-h-[150px]">
                             {players.map((item) => (
                                 <FormField
-                                    key={item.id}
+                                    key={item.player_id}
                                     control={form.control}
                                     name="items"
                                     render={({ field }) => {
                                         return (
                                             <FormItem
-                                                key={item.id}
+                                                key={item.player_id}
                                                 className="flex flex-row items-start space-x-3 space-y-0"
                                             >
                                                 <FormControl>
                                                     <Checkbox
-                                                        checked={field.value?.includes(item.id)}
+                                                        checked={field.value?.includes(item.player_id)}
                                                         onCheckedChange={(checked) => {
                                                             return checked
-                                                                ? field.onChange([...field.value, item.id])
+                                                                ? field.onChange([...field.value, item.player_id])
                                                                 : field.onChange(
                                                                     field.value?.filter(
-                                                                        (value) => value !== item.id
+                                                                        (value) => value !== item.player_id
                                                                     )
                                                                 )
                                                         }}
                                                     />
                                                 </FormControl>
                                                 <FormLabel className="font-normal">
-                                                    {item.label}
+                                                    {item.full_name}
                                                 </FormLabel>
                                             </FormItem>
                                         )

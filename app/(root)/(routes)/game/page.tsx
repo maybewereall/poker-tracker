@@ -1,14 +1,17 @@
 import prismadb from "@/lib/prismadb";
-import NewGameForm from "./components/new-game-form";
+// import NewGameForm from "./[gameId]/components/new-game-form";
 
-export default async function NewGamePage({ gameId }) {
+export default async function NewGamePage() {
 
-    const players = await prismadb.player.findMany();
+    const players = await prismadb.players.findMany();
     const formattedPlayers = players.map((item) => ({
-        id: item.id,
-        label: item.name
+        player_id: (item.player_id).toString(),
+        full_name: item.full_name
     }));
     return (
-        <NewGameForm players={formattedPlayers}/>
+        <div></div>
+        // <NewGameForm players={formattedPlayers}/>
     )
 }
+
+// List of games

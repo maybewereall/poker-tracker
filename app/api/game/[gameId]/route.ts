@@ -10,16 +10,20 @@ export async function GET(
         if (!params.gameId){
             return new NextResponse("Game ID is required", { status: 400 });
         }
+
+        if (isNaN(parseInt(params.gameId))) {
+            return new NextResponse("Invalid Game ID", { status: 400 });
+        }
         
-        const game = await prismadb.game.findUnique({
+        const game = await prismadb.games.findUnique({
             where: {
-                id: params.gameId,
+                game_id: parseInt(params.gameId),
             }
         });
 
         return NextResponse.json(game);
     } catch (error) {
         console.log("[GAME_GET]", error);
-        return new NextResponse("Internal error", { status: 500 })
+        return new NextResponse(`Internal error. Message: ${error}`, { status: 500 })
     }
 }

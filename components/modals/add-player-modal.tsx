@@ -22,7 +22,8 @@ import { toast } from "react-hot-toast";
 import { redirect } from "next/navigation";
  
 const formSchema = z.object({
-    name: z.string().min(1),
+    full_name: z.string().min(1),
+    email: z.string().min(5).email()
 })
 export const PlayerModal = () => {
     const playerModal = usePlayerModal();
@@ -31,7 +32,8 @@ export const PlayerModal = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
+            full_name: "",
+            email: ""
         },
     });
 
@@ -39,8 +41,6 @@ export const PlayerModal = () => {
         try {
             setLoading(true);
             const response = await axios.post('/api/players', {
-                games: [],
-                results: [],
                 ...values
             });
             toast.success("Player added");
@@ -62,15 +62,33 @@ export const PlayerModal = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
-                            name="name"
+                            name="full_name"
                             control={form.control}
                             render={({field}) => (
-                                <FormItem>
+                                <FormItem className="mb-4">
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={loading}
                                             placeholder="Full Name"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            name="email"
+                            control={form.control}
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            disabled={loading}
+                                            type="email"
+                                            placeholder="Email"
                                             {...field}
                                         />
                                     </FormControl>

@@ -2,28 +2,34 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from './cell-action';
+import { PlayerStatistics } from "@prisma/client";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type PlayerColumn = {
-    id: string;
-    name: string;
-    games: Number;
-    createdAt: string;
+    player_id: Number;
+    full_name: string;
+    email: string;
+    playerStatistics: PlayerStatistics | null;
+    date_joined: string;
 }
 
 export const columns: ColumnDef<PlayerColumn>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "player_id",
+    header: "ID",
+  },
+  {
+    accessorKey: "full_name",
     header: "Name",
   },
   {
-    accessorKey: "games",
-    header: "Games",
+    accessorKey: "email",
+    header: "Email",
   },
   {
-    accessorKey: "createdAt",
-    header: "Created"
+    accessorKey: "date_joined",
+    header: "Date Joined"
   },
   {
     id: "actions",

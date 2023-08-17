@@ -8,35 +8,45 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Player {
-  id        String   @id @default(uuid())
-  name      String
-  results   Result[] @relation("ResultToPlayer")
-  games     Game[]   @relation("PlayerToGame")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Players {
+  player_id   Int      @id @default(autoincrement())
+  full_name   String
+  email       String
+  date_joined DateTime
+
+  gameParticipants GameParticipants[]
+  playerStatistics PlayerStatistics?
 }
 
-model Result {
-  id        String   @id @default(uuid())
-  player    Player   @relation("ResultToPlayer", fields: [playerId], references: [id])
-  playerId  String
-  buyIn     Int
-  final     Int
-  gameId    String
-  game      Game     @relation("ResultToGame", fields: [gameId], references: [id])
-  createdAt DateTime @default(now())
+model Games {
+  game_id   Int      @id @default(autoincrement())
+  game_date DateTime
+  location  String
 
-  @@index([playerId])
-  @@index([gameId])
+  gameParticipants GameParticipants[]
 }
 
-model Game {
-  id        String   @id @default(uuid())
-  date      DateTime
-  players   Player[] @relation("PlayerToGame")
-  results   Result[] @relation("ResultToGame")
-  isOngoing Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model GameParticipants {
+  participant_id  Int @id @default(autoincrement())
+  game_id         Int
+  player_id       Int
+  buy_in_amount   Int
+  cash_out_amount Int
+
+  player Players @relation(fields: [player_id], references: [player_id])
+  game   Games   @relation(fields: [game_id], references: [game_id])
+
+  @@index([player_id])
+  @@index([game_id])
+}
+
+model PlayerStatistics {
+  player_stats_id    Int @id @default(autoincrement())
+  player_id          Int @unique
+  total_games_played Int
+  total_buy_ins      Int
+  total_cash_outs    Int
+  net_profit         Int
+
+  player Players @relation(fields: [player_id], references: [player_id])
 }
