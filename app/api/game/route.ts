@@ -37,15 +37,7 @@ export async function POST(
                 gameParticipants: {
                     create: players.map((player: Players) => ({
                         player: {
-                            connectOrCreate: {
-                                where: { player_id: player.player_id },
-                                create: {
-                                    player_id: player.player_id,
-                                    full_name: player.full_name,
-                                    email: player.email,
-                                    date_joined: new Date()
-                                },
-                            },
+                            connect: { player_id: player.player_id },
                         },
                         buy_in_amount: parseInt(initial_buyin),
                         cash_out_amount: 0,

@@ -18,7 +18,14 @@ export async function GET(
         const game = await prismadb.games.findUnique({
             where: {
                 game_id: parseInt(params.gameId),
-            }
+            },
+            include: {
+                gameParticipants: {
+                    include: {
+                        player: true,
+                    },
+                },
+            },
         });
 
         return NextResponse.json(game);
