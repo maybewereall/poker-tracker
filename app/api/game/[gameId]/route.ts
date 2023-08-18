@@ -23,6 +23,7 @@ export async function GET(
                 gameParticipants: {
                     include: {
                         player: true,
+                        top_ups: true
                     },
                 },
             },
@@ -31,6 +32,6 @@ export async function GET(
         return NextResponse.json(game);
     } catch (error) {
         console.log("[GAME_GET]", error);
-        return new NextResponse(`Internal error. Message: ${error}`, { status: 500 })
+        return new NextResponse(`Internal error`, { status: 500 })
     }
 }

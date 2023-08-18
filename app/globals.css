@@ -80,3 +80,9 @@ body,
 :root {
   height: 100%;
 }
+.top-up-val {
+  border-left: 1px solid transparent;
+}
+.top-up-val + .top-up-val {
+  border-left-color: black;
+}

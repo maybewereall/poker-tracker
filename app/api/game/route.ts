@@ -40,7 +40,7 @@ export async function POST(
                             connect: { player_id: player.player_id },
                         },
                         buy_in_amount: parseInt(initial_buyin),
-                        cash_out_amount: 0,
+                        cash_out_amount: 0
                     })),
                 },
             },

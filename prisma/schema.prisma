@@ -27,10 +27,11 @@ model Games {
 }
 
 model GameParticipants {
-  participant_id  Int @id @default(autoincrement())
+  participant_id  Int     @id @default(autoincrement())
   game_id         Int
   player_id       Int
   buy_in_amount   Int
+  top_ups         TopUp[]
   cash_out_amount Int
 
   player Players @relation(fields: [player_id], references: [player_id])
@@ -49,4 +50,14 @@ model PlayerStatistics {
   net_profit         Int
 
   player Players @relation(fields: [player_id], references: [player_id])
+}
+
+model TopUp {
+  top_up_id      Int              @id @default(autoincrement())
+  amount         Decimal
+  timestamp      DateTime         @default(now())
+  participant    GameParticipants @relation(fields: [participant_id], references: [participant_id])
+  participant_id Int
+
+  @@index([participant_id])
 }
