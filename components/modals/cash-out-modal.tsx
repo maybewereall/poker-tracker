@@ -22,7 +22,7 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 
-interface ITopUpModalProps {
+interface ICashOutModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -33,10 +33,10 @@ interface ITopUpModalProps {
 }
 
 const formSchema = z.object({
-  top_up: z.string().refine((val) => !Number.isNaN(parseInt(val, 10))),
+    cash_out: z.string().refine((val) => !Number.isNaN(parseInt(val, 10))),
 });
 
-const TopUpModal: React.FunctionComponent<ITopUpModalProps> = ({
+const CashOutModal: React.FunctionComponent<ICashOutModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -50,18 +50,17 @@ const TopUpModal: React.FunctionComponent<ITopUpModalProps> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      top_up: "300",
+        cash_out: "",
     },
   });
   const params = useParams();
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
 	const data = {
 		participant_id: participantId,
-		amount: parseInt(values.top_up),
-		timestamp: Date.now()
+		amount: parseInt(values.cash_out),
 	}
 	try {
-		const response = await axios.patch(`/api/game/${params.gameId}/top-up/${playerId}`, {...data});
+		const response = await axios.patch(`/api/game/${params.gameId}/cash-out/${playerId}`, {...data});
 		console.log("topped up", response);
 		toast.success("Topped up!")
 	} catch(error) {
@@ -77,7 +76,7 @@ const TopUpModal: React.FunctionComponent<ITopUpModalProps> = ({
 
   return (
     <Modal
-      title={`Top up ${playerName}`}
+      title={`Cash Out ${playerName}`}
       description=""
       isOpen={isOpen}
       onClose={onClose}
@@ -85,16 +84,16 @@ const TopUpModal: React.FunctionComponent<ITopUpModalProps> = ({
       <Form {...form}>
 		<form onSubmit={form.handleSubmit(onSubmit)}>
 		<FormField
-		  name="top_up"
+		  name="cash_out"
 		  control={form.control}
 		  render={({ field }) => (
 			<FormItem>
-			  <FormLabel>Top up</FormLabel>
+			  <FormLabel>Final chip count</FormLabel>
 			  <FormControl>
 				<Input
 				  disabled={loading}
 				  type="text"
-				  placeholder="Top up amount"
+				  placeholder="Final chip count"
 				  {...field}
 				/>
 			  </FormControl>
@@ -104,7 +103,7 @@ const TopUpModal: React.FunctionComponent<ITopUpModalProps> = ({
 		/>
 		<div className="flex justify-between mt-4">
 			<Button variant="outline" type="button" onClick={onClose}>Cancel</Button>
-			<Button variant="default" type="submit">Confirm</Button>
+			<Button variant="destructive" type="submit">Confirm</Button>
 		</div>
 	  </form>
 	  </Form>
@@ -112,4 +111,4 @@ const TopUpModal: React.FunctionComponent<ITopUpModalProps> = ({
   );
 };
 
-export default TopUpModal;
+export default CashOutModal;

@@ -8,7 +8,7 @@ export async function PATCH(
 ) {
     const body = await req.json();
     console.log({body});
-    const { participant_id, amount, timestamp } = body;
+    const { participant_id, amount } = body;
     const { userId } = auth();
     
     if(!userId) {
@@ -24,16 +24,13 @@ export async function PATCH(
     }
 
     try {
-        const updatedParticipant = await prismadb.topUp.create({
+        const updatedParticipant = await prismadb.gameParticipants.update({
+            where: {
+                participant_id: participant_id
+            },
             data: {
-                amount,
-                timestamp: new Date(timestamp),
-                participant: {
-                  connect: {
-                    participant_id,
-                  },
-                },
-              },
+                cash_out_amount: amount
+            },
           });
         return NextResponse.json(updatedParticipant);
     } catch (error) {
