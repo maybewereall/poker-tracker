@@ -7,6 +7,7 @@ import { ToasterProvider } from '@/providers/toaster-provider';
 import { ModalProvider } from '@/providers/modal-provider';
 
 import Container from '@/components/ui/container';
+import { Navbar } from '@/components/navbar';
 
 const font = Dosis({ subsets: ['latin'] })
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <body className={font.className}>
           <ModalProvider />
           <ToasterProvider />
+          <Navbar />
           <Container>
             {children}
           </Container>

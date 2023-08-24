@@ -47,7 +47,9 @@ export default function Home() {
           onConfirm={() => null}
           players={playerList}
       />
-      <Button onClick={() => setOpen(true)} disabled={loading}>Start New Game</Button>
+      <div className="flex w-full h-full justify-center items-center">
+        <Button onClick={() => setOpen(true)} disabled={loading}>Start New Game</Button>
+      </div>
       </>
   )
 }

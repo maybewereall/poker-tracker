@@ -2,6 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import { Players } from "@prisma/client";
+import { handleApiError } from "@/lib/api";
 
 export async function GET(
     req: Request
@@ -13,9 +14,8 @@ export async function GET(
         } else {
             return new NextResponse("No games available", { status: 404 })
         }
-    } catch (error) {
-        console.log('[GAME_GET]', error);
-        return new NextResponse("Internal error", { status: 500 })
+    } catch (error: any) {
+        return handleApiError(error, "GAME_GET");
     }
 }
 

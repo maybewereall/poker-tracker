@@ -20,7 +20,7 @@ export default async function PlayerPage() {
     date_joined: format(item.date_joined, "MMM do, yyyy")
   }))
   return (
-    <div className="flex-col w-full max-w-[800px]">
+    <div className="flex-col w-full max-w-[800px] mx-auto">
         <div className="flex-1 space-y-4 p-8 pt-6">
             <PlayerClient data={formattedPlayers}/>
         </div>
