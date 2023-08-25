@@ -61,8 +61,9 @@ const CashOutModal: React.FunctionComponent<ICashOutModalProps> = ({
 	}
 	try {
 		const response = await axios.patch(`/api/game/${params.gameId}/cash-out/${playerId}`, {...data});
-		console.log("topped up", response);
-		toast.success("Topped up!")
+		console.log("cash out", response);
+		toast.success("Player cashed out!");
+    onClose();
 	} catch(error) {
 		console.log(error);
 		toast.error("Something went wrong.")

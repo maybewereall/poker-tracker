@@ -3,8 +3,8 @@ interface ILogoProps {}
 const Logo: React.FunctionComponent<ILogoProps> = (props) => {
   return (
     <div>
-        <span className="kerning-20">ARIA</span><br />
-        <span className="">Pokerinos</span>
+        <span className="tracking-[0.625em] font-bold text-2xl">ARIA</span><br />
+        <span className="leading-3 tracking-[0.25rem]">Pokerinos</span>
     </div>
 );
 };

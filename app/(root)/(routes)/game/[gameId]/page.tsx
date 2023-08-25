@@ -2,37 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 import format from "date-fns/format";
 
 import { cn } from "@/lib/utils";
 
+import useGameData from "@/hooks/use-game-data";
+
 import TopUpModal from "@/components/modals/top-up-modal";
 import CashOutModal from "@/components/modals/cash-out-modal";
 import { Button } from "@/components/ui/button";
-
-interface IGameResponseData {
-    gameParticipants: {
-        buy_in_amount: number
-        cash_out_amount: number
-        game_id: number
-        participant_id: number
-        player_id: number
-        top_ups: {
-            amount: number
-            timestamp: Date
-        }[]
-        player: { 
-            player_id: number
-            full_name: string
-            email: string
-            date_joined: string
-        }
-    }[]
-    game_date: string
-    game_id: number
-    location: string
-}
 
 interface IPlayerDataModel {
     playerName: string;
@@ -44,40 +25,57 @@ export default function GamePage() {
     const params = useParams();
     const [openCashOut, setOpenCashOut] = useState(false);
     const [openTopUp, setOpenTopUp] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [gameData, setGameData] = useState<IGameResponseData>();
+    const [refreshKey, setRefreshKey] = useState(0);
     const [selectedPlayer, setSelectedPlayer] = useState<IPlayerDataModel>({
         playerName: "",
         playerId: 0,
         participantId: 0,
-    })
-
-    useEffect(() => {
-        async function fetchPlayers() {
-            try {
-                const response = await fetch(`/api/game/${params.gameId}`);
-                const data = await response.json();
-                setGameData(data);
-                console.log(data);
-            } catch (error) {
-                console.log(error);        
-            }
-        }
-        fetchPlayers();
-    }, []);
+    });
+    
+    let gameId = params.gameId as string;
+    
+    const { gameData, loading, error } = useGameData(gameId, refreshKey);
+    
+    
     const handleTopUpModal = (playerData: IPlayerDataModel) => {
         setSelectedPlayer(playerData);
         setOpenTopUp(true);
     }
+
     const handleCashOutModal = (playerData: IPlayerDataModel) => {
         setSelectedPlayer(playerData);
         setOpenCashOut(true);
     }
+
+    const handleCloseTopUpModal = () => {
+        console.log("close top up");
+        setOpenTopUp(false);
+        setRefreshKey(oldKey => oldKey + 1);
+    }
+
+    const handleCloseCashOutModal = () => {
+        console.log("close cash out");
+        setOpenCashOut(false);
+        setRefreshKey(oldKey => oldKey + 1);
+    }
+
+    const handleTopUpSubmit = async (data: { participant_id: number, amount: string, timestamp: number }) => {
+        console.log("handleTopupSubmit")
+        try {
+          const response = await axios.patch(`/api/game/${params.gameId}/top-up/${selectedPlayer.playerId}`, {...data});
+          console.log("topped up", response);
+          toast.success("Topped up!");
+          handleCloseTopUpModal();
+        } catch(error) {
+          console.log(error);
+          toast.error("Something went wrong.")
+        }
+      }
     return (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4 mt-4">
             {gameData && 
-                gameData.gameParticipants.map((item, index) => (
-                    <div key={index} className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3", item.cash_out_amount > 0 && "player-cashed-out")}>
+                gameData.gameParticipants.map((item) => (
+                    <div key={item.player_id} className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3", item.cash_out_amount > 0 && "player-cashed-out")}>
                         <div>
                             <div className="font-bold text-xl text-center">{item.player.full_name}</div>
                             <div>Buy In: <span className="text-lg font-bold mx-1 pl-1">{(item.buy_in_amount).toString()}</span></div>
@@ -86,7 +84,7 @@ export default function GamePage() {
                                 {item.top_ups.length > 0 ? (
                                     <div className="inline">
                                         {item.top_ups.map((topup) => (
-                                            <span className="top-up-val font-bold text-lg mx-1 pl-1"> {(topup.amount).toString()}</span>
+                                            <span key={(topup.timestamp).toString()} className="top-up-val font-bold text-lg mx-1 pl-1"> {(topup.amount).toString()}</span>
                                         ))}
                                     </div>
                                 ) : (
@@ -116,16 +114,15 @@ export default function GamePage() {
             }
             <TopUpModal
                 isOpen={openTopUp}
-                onClose={() => {setOpenTopUp(false)}}
-                onConfirm={() => null}
+                onClose={handleCloseTopUpModal}
+                onSubmit={handleTopUpSubmit}
                 loading={loading}
                 playerName={selectedPlayer.playerName}
-                playerId={selectedPlayer.playerId}
                 participantId={selectedPlayer.participantId}
             />
             <CashOutModal
                 isOpen={openCashOut}
-                onClose={() => {setOpenCashOut(false)}}
+                onClose={() => handleCloseCashOutModal}
                 onConfirm={() => null}
                 loading={loading}
                 playerName={selectedPlayer.playerName}
