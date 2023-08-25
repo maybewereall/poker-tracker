@@ -37,45 +37,53 @@ export default function GamePage() {
     const { gameData, loading, error } = useGameData(gameId, refreshKey);
     
     
-    const handleTopUpModal = (playerData: IPlayerDataModel) => {
+    const handleModal = (playerData: IPlayerDataModel, modalType: 'topUp' | 'cashOut', isOpen: boolean) => {
         setSelectedPlayer(playerData);
-        setOpenTopUp(true);
+        if (modalType === 'topUp') {
+            setOpenTopUp(isOpen);
+        } else if (modalType === 'cashOut') {
+            setOpenCashOut(isOpen);
+        }
     }
-
-    const handleCashOutModal = (playerData: IPlayerDataModel) => {
-        setSelectedPlayer(playerData);
-        setOpenCashOut(true);
-    }
-
-    const handleCloseTopUpModal = () => {
-        console.log("close top up");
-        setOpenTopUp(false);
-        setRefreshKey(oldKey => oldKey + 1);
-    }
-
-    const handleCloseCashOutModal = () => {
-        console.log("close cash out");
-        setOpenCashOut(false);
+    
+    const handleCloseModal = (modalType: 'topUp' | 'cashOut') => {
+        if (modalType === 'topUp') {
+            setOpenTopUp(false);
+        } else if (modalType === 'cashOut') {
+            setOpenCashOut(false);
+        }
         setRefreshKey(oldKey => oldKey + 1);
     }
 
     const handleTopUpSubmit = async (data: { participant_id: number, amount: string, timestamp: number }) => {
-        console.log("handleTopupSubmit")
         try {
           const response = await axios.patch(`/api/game/${params.gameId}/top-up/${selectedPlayer.playerId}`, {...data});
-          console.log("topped up", response);
           toast.success("Topped up!");
-          handleCloseTopUpModal();
+          handleCloseModal('topUp');
         } catch(error) {
           console.log(error);
           toast.error("Something went wrong.")
         }
-      }
+    }
+    const handleCashOutSubmit = async (data: { participant_id: number, amount: string }) => {
+        try {
+            const response = await axios.patch(`/api/game/${params.gameId}/cash-out/${selectedPlayer.playerId}`, {...data});
+            console.log("cash out", response);
+            toast.success("Player cashed out!");
+            handleCloseModal('cashOut');
+        } catch(error: any) {
+            console.log(error);
+            toast.error("Something went wrong.")
+        }
+    }
     return (
         <div className="grid grid-cols-4 gap-4 mt-4">
             {gameData && 
-                gameData.gameParticipants.map((item) => (
-                    <div key={item.player_id} className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3", item.cash_out_amount > 0 && "player-cashed-out")}>
+                gameData.gameParticipants.map((item) => 
+                {
+                    const isCashedOut = item.cash_out_amount > 0;
+                    return (
+                    <div key={item.player_id} className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3", isCashedOut && "player-cashed-out")}>
                         <div>
                             <div className="font-bold text-xl text-center">{item.player.full_name}</div>
                             <div>Buy In: <span className="text-lg font-bold mx-1 pl-1">{(item.buy_in_amount).toString()}</span></div>
@@ -97,24 +105,32 @@ export default function GamePage() {
                                 {item.cash_out_amount ? ("cashed out") : ("-") }
                             </div>
                             <div className="flex w-full gap-4">
-                                <Button variant="ghost" className="" onClick={() => handleCashOutModal({
-                                    playerName: item.player.full_name,
-                                    playerId: item.player_id,
-                                    participantId: item.participant_id
-                                })}>Cash Out</Button>
-                                <Button variant="default" className="grow" onClick={() => handleTopUpModal({
-                                    playerName: item.player.full_name,
-                                    playerId: item.player_id,
-                                    participantId: item.participant_id
-                                })}>Top Up</Button>
+                                <Button variant="ghost" className="" onClick={() => handleModal(
+                                    {
+                                        playerName: item.player.full_name,
+                                        playerId: item.player_id,
+                                        participantId: item.participant_id
+                                    },
+                                    'cashOut',
+                                    true
+                                )}>Cash Out</Button>
+                                <Button variant="default" className="grow" onClick={() => handleModal(
+                                    {
+                                        playerName: item.player.full_name,
+                                        playerId: item.player_id,
+                                        participantId: item.participant_id
+                                    },
+                                    'topUp',
+                                    true
+                                )}>Top Up</Button>
                             </div>
                         </div>
                     </div>
-                ))
+                )})
             }
             <TopUpModal
                 isOpen={openTopUp}
-                onClose={handleCloseTopUpModal}
+                onClose={() => handleCloseModal('topUp')}
                 onSubmit={handleTopUpSubmit}
                 loading={loading}
                 playerName={selectedPlayer.playerName}
@@ -122,11 +138,10 @@ export default function GamePage() {
             />
             <CashOutModal
                 isOpen={openCashOut}
-                onClose={() => handleCloseCashOutModal}
-                onConfirm={() => null}
+                onClose={() => handleCloseModal('cashOut')}
+                onSubmit={handleCashOutSubmit}
                 loading={loading}
                 playerName={selectedPlayer.playerName}
-                playerId={selectedPlayer.playerId}
                 participantId={selectedPlayer.participantId}
             />
         </div>

@@ -29,12 +29,12 @@ export async function PATCH(
                 participant_id: participant_id
             },
             data: {
-                cash_out_amount: amount
+                cash_out_amount: parseInt(amount)
             },
           });
         return NextResponse.json(updatedParticipant);
     } catch (error) {
-        console.log("[TOPUP_PATCH]", error);
+        console.log("[CASHOUT_PATCH]", error);
         return new NextResponse(`Internal error`, { status: 500 })
     }
 }
