@@ -1,27 +1,29 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-interface IGameResponseData {
-    gameParticipants: {
-        buy_in_amount: number
-        cash_out_amount: number
-        game_id: number
-        participant_id: number
-        player_id: number
-        top_ups: {
-            amount: number
-            timestamp: Date
-        }[]
-        player: { 
-            player_id: number
-            full_name: string
-            email: string
-            date_joined: string
-        }
-    }[]
+export interface IGameResponseData {
+    gameParticipants: IGameParticipantData[]
     game_date: string
     game_id: number
     location: string;
+}
+
+export interface IGameParticipantData {
+    buy_in_amount: number
+    cash_out_amount: number
+    game_id: number
+    participant_id: number
+    player_id: number
+    top_ups: {
+        amount: number
+        timestamp: Date
+    }[]
+    player: { 
+        player_id: number
+        full_name: string
+        email: string
+        date_joined: string
+    }
 }
 
 function useGameData(gameId: string, refreshKey: number) {
