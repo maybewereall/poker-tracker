@@ -16,6 +16,7 @@ export default function GamePage() {
     const [openCashOut, setOpenCashOut] = useState(false);
     const [openTopUp, setOpenTopUp] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [selectedPlayer, setSelectedPlayer] = useState<IPlayerDataModel>({
         playerName: "",
         playerId: 0,
@@ -24,7 +25,7 @@ export default function GamePage() {
     
     let gameId = params.gameId as string;
     
-    const { gameData, loading, error } = useGameData(gameId, refreshKey);
+    const { gameData, error } = useGameData(gameId, refreshKey);
     
     
     const handleModal = (playerData: IPlayerDataModel, modalType: 'buyIn' | 'cashOut', isOpen: boolean) => {
@@ -46,6 +47,7 @@ export default function GamePage() {
     }
 
     const handleBuyInSubmit = async (data: { participant_id: number, amount: string, timestamp: number }) => {
+        setLoading(true);
         try {
           const response = await axios.post(`/api/game/${params.gameId}/buy-in/${selectedPlayer.playerId}`, {...data});
           handleCloseModal('buyIn');
@@ -53,8 +55,10 @@ export default function GamePage() {
           console.log(error);
           toast.error("Something went wrong.")
         }
+        setLoading(false);
     }
     const handleCashOutSubmit = async (data: { participant_id: number, amount: string }) => {
+        setLoading(true);
         try {
             const response = await axios.patch(`/api/game/${params.gameId}/cash-out`, {...data});
             toast.success("Player cashed out!");
@@ -63,12 +67,13 @@ export default function GamePage() {
             console.log(error);
             toast.error("Something went wrong.")
         }
+        setLoading(false);
     }
     return (
         <div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                 {gameData && 
-                    gameData.gameParticipants.filter(player => player.cash_out_amount === 0).map((player) => 
+                    gameData.gameParticipants.filter(player => player.cash_out_amount < 0).map((player) => 
                         <PlayerCard key={player.participant_id} item={player} handleModal={handleModal} />
                     )
                 }
@@ -92,7 +97,7 @@ export default function GamePage() {
             <hr className="my-8" />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                 {gameData && 
-                    gameData.gameParticipants.filter(player => player.cash_out_amount !== 0).map((player) => 
+                    gameData.gameParticipants.filter(player => player.cash_out_amount >= 0).map((player) => 
                         <PlayerCard key={player.participant_id} item={player} handleModal={handleModal} cashedOut />
                     )
                 }

@@ -25,6 +25,11 @@ export async function GET(
                         player: true,
                         buy_in: true
                     },
+                    orderBy: {
+                        player: {
+                            full_name: 'asc'
+                        }
+                    },
                 },
             },
         });

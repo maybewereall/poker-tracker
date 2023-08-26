@@ -94,8 +94,8 @@ const BuyInModal: React.FunctionComponent<ITopUpModalProps> = ({
             )}
           />
           <div className="flex justify-between mt-4">
-            <Button variant="outline" type="button" onClick={onClose}>Cancel</Button>
-            <Button variant="default" type="submit">Confirm</Button>
+            <Button variant="outline" type="button" disabled={loading} onClick={onClose}>Cancel</Button>
+            <Button variant="default" type="submit" disabled={loading}>Confirm</Button>
           </div>
           </form>
       </Form>

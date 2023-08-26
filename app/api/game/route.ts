@@ -39,7 +39,7 @@ export async function POST(
                         player: {
                             connect: { player_id: player.player_id },
                         },
-                        cash_out_amount: -1
+                        cash_out_amount: -1,
                     })),
                 },
             },
@@ -51,6 +51,20 @@ export async function POST(
                 },
             },
         });
+
+        for (let eachParticipant of newGame.gameParticipants) {
+            await prismadb.buyIn.create({
+                data: {
+                    amount: initial_buyin,
+                    timestamp: new Date(),
+                    participant: {
+                        connect: {
+                          participant_id: eachParticipant.participant_id
+                        },
+                    },
+                },
+            });
+        }
 
         return NextResponse.json(newGame);
 

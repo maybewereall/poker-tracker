@@ -7,7 +7,6 @@ export async function POST(
     { params }: { params: { gameId: string } }
 ) {
     const body = await req.json();
-    console.log({body});
     const { participant_id, amount } = body;
     const { userId } = auth();
     if(!userId) {

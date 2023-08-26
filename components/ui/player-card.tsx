@@ -29,7 +29,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
     }
     const totalBuyIn = calculateBuyIn(item.buy_in);
     const cashOut = item.cash_out_amount !== -1 ? item.cash_out_amount : 0
-    const finalResult = totalBuyIn - cashOut;
+    const finalResult = cashOut - totalBuyIn;
 
     return (
         <div className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3", isCashedOut && "bg-gray-100" )}>
@@ -38,7 +38,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
                 <div>
                     <div>Buy In: <span className="font-bold">{totalBuyIn}</span></div>
                     <div>Cash Out: <span className="font-bold">{cashOut}</span></div>
-                    <div className={cn("text-center font-bold text-3xl", finalResult > 0 ? "text-green-600" : "text-red-600")}>{finalResult}</div>
+                    <div className={cn("text-center font-bold text-3xl", finalResult < 0 ? "text-red-600" : "text-green-600")}>{finalResult}</div>
                 </div>
             ) : (
             <div>
@@ -62,7 +62,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
             </div>
 
             )}
-            <div>
+            <div className="mt-4">
                     {/* <div className="p-6 text-center font-bold text-3xl">
                         {item.cash_out_amount ? item.cash_out_amount : ("-")}
                     </div> */}

@@ -1,11 +1,12 @@
 "use client";
 
 import * as z from "zod"
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
 import { Players } from "@prisma/client";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,8 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
     const [loading, setLoading] = useState(false);
     const [date, setDate] = useState<Date | undefined>(new Date);
 
+    const router = useRouter();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -78,26 +81,11 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
     if (!isMounted) return null;
 
 
-
-    // const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await axios.post('/api/players', {
-    //             ...values
-    //         });
-    //         toast.success("Player added");
-    //     } catch (error) {
-    //         toast.error("Something went wrong.")
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         const selectedPlayerData = players?.filter((player) => values.players.includes((player.player_id).toString()));
-        console.log({ selectedPlayerData });
         try {
             setLoading(true);
-            const data = await axios.post('/api/game', {
+            const response = await axios.post('/api/game', {
                 date: values.date,
                 initial_buyin: values.initial_buyin,
                 players: selectedPlayerData?.map((player) => ({
@@ -106,8 +94,9 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
                     email: player.email,
                 })),
             });
-            console.log('New game added:', data);
-        //     toast.success("Player added");
+            toast.success("Game created. Redirecting...");
+            router.push(`/game/${response.data.game_id}`)
+
         } catch (error) {
             toast.error("Something went wrong.")
         } finally {

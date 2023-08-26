@@ -27,23 +27,19 @@ export interface IGameParticipantData {
 
 function useGameData(gameId: string, refreshKey: number) {
   const [gameData, setGameData] = useState<IGameResponseData>();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
     axios.get(`/api/game/${gameId}`)
       .then(response => {
         setGameData(response.data);
-        setLoading(false);
       })
       .catch(error => {
         setError(error);
-        setLoading(false);
       });
   }, [gameId, refreshKey]);
 
-  return { gameData, loading, error };
+  return { gameData, error };
 }
 
 export default useGameData;
