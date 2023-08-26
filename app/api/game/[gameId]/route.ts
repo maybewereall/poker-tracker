@@ -23,7 +23,7 @@ export async function GET(
                 gameParticipants: {
                     include: {
                         player: true,
-                        top_ups: true
+                        buy_in: true
                     },
                 },
             },

@@ -13,9 +13,9 @@ export async function GET(
         } else {
             return new NextResponse("Couldn't get players", {status: 404})
         }
-
-    } catch (error: any) {
-        return handleApiError(error, "PLAYERS_POST");
+    } catch (error) {
+        console.log("[PLAYERS_POST]", error);
+        return new NextResponse(`Internal error`, { status: 500 })
     }
 }
 

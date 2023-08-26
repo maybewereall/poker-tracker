@@ -86,3 +86,7 @@ body,
 .top-up-val + .top-up-val {
   border-left-color: black;
 }
+
+.cashed-out-card {
+  background-color: lightgray;
+}

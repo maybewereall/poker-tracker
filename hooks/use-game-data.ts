@@ -9,12 +9,11 @@ export interface IGameResponseData {
 }
 
 export interface IGameParticipantData {
-    buy_in_amount: number
     cash_out_amount: number
     game_id: number
     participant_id: number
     player_id: number
-    top_ups: {
+    buy_in: {
         amount: number
         timestamp: Date
     }[]

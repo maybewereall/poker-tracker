@@ -1,14 +1,16 @@
+// buy in via player id param
+
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-export async function PATCH(
+export async function POST(
     req: Request,
     { params }: { params: { gameId: string, playerId: string } }
 ) {
     const body = await req.json();
     console.log({body});
-    const { participant_id, amount } = body;
+    const { participant_id, amount, timestamp } = body;
     const { userId } = auth();
     
     if(!userId) {
@@ -24,17 +26,20 @@ export async function PATCH(
     }
 
     try {
-        const updatedParticipant = await prismadb.gameParticipants.update({
-            where: {
-                participant_id: participant_id
-            },
+        const updatedParticipant = await prismadb.buyIn.create({
             data: {
-                cash_out_amount: parseInt(amount)
-            },
+                amount,
+                timestamp: new Date(timestamp),
+                participant: {
+                  connect: {
+                    participant_id,
+                  },
+                },
+              },
           });
         return NextResponse.json(updatedParticipant);
     } catch (error) {
-        console.log("[CASHOUT_PATCH]", error);
+        console.log("[TOPUP_PATCH]", error);
         return new NextResponse(`Internal error`, { status: 500 })
     }
 }

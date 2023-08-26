@@ -14,17 +14,8 @@ import {
     FormMessage,
     FormDescription
 } from "@/components/ui/form";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select";
 
-import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { Players } from "@prisma/client";
 
 interface NewGameFormProps {
     players: {

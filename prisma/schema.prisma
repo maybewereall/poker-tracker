@@ -16,6 +16,7 @@ model Players {
 
   gameParticipants GameParticipants[]
   playerStatistics PlayerStatistics?
+  gameStatistics   GameStatistics[]
 }
 
 model Games {
@@ -24,14 +25,14 @@ model Games {
   location  String
 
   gameParticipants GameParticipants[]
+  gameStatistics   GameStatistics[]
 }
 
 model GameParticipants {
   participant_id  Int     @id @default(autoincrement())
   game_id         Int
   player_id       Int
-  buy_in_amount   Int
-  top_ups         TopUp[]
+  buy_in          BuyIn[]
   cash_out_amount Int
 
   player Players @relation(fields: [player_id], references: [player_id])
@@ -52,8 +53,23 @@ model PlayerStatistics {
   player Players @relation(fields: [player_id], references: [player_id])
 }
 
-model TopUp {
-  top_up_id      Int              @id @default(autoincrement())
+model GameStatistics {
+  game_stats_id     Int @id @default(autoincrement())
+  game_id           Int
+  player_id         Int
+  buy_ins           Int
+  cash_outs         Int
+  profit            Int
+
+  player Players @relation(fields: [player_id], references: [player_id])
+  game   Games   @relation(fields: [game_id], references: [game_id])
+
+  @@index([player_id])
+  @@index([game_id])
+}
+
+model BuyIn {
+  buy_in_id      Int              @id @default(autoincrement())
   amount         Decimal
   timestamp      DateTime         @default(now())
   participant    GameParticipants @relation(fields: [participant_id], references: [participant_id])

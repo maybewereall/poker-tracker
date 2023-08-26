@@ -2,7 +2,7 @@ import { addPlayerStatistics } from '@/services/playerStatisticsService';
 
 import { NextResponse } from 'next/server';
 
-export async function PATCH(
+export async function POST(
     req: Request,
     { params }: { params: { playerId: string } }
 ) {

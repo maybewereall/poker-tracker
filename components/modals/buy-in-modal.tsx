@@ -35,7 +35,7 @@ const formSchema = z.object({
   amount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)))
 });
 
-const TopUpModal: React.FunctionComponent<ITopUpModalProps> = ({
+const BuyInModal: React.FunctionComponent<ITopUpModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
@@ -103,4 +103,4 @@ const TopUpModal: React.FunctionComponent<ITopUpModalProps> = ({
   );
 };
 
-export default TopUpModal;
+export default BuyInModal;
