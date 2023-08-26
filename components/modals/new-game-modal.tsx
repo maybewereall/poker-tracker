@@ -49,7 +49,7 @@ const formSchema = z.object({
     initial_buyin: z.string(),
     date: z.date(),
     players: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: "You have to select at least one item.",
+        message: "You have to select at least one player.",
     }),
 })
 export const NewGameModal: React.FC<INewGameModalProps> = ({
@@ -122,7 +122,7 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
             isOpen={isOpen}
             onClose={onClose}
         >
-            <div className="space-y-4 py-2 pb-4">
+            <div className=" py-2 pb-4">
                 <Form {...form}>
 
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -131,14 +131,14 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
                             control={form.control}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block">Date</FormLabel>
+                                    <FormLabel className="block h-[17px]">Date</FormLabel>
                                     <FormControl>
                                         <Popover>
                                             <PopoverTrigger asChild>
                                                 <Button
                                                     variant={"outline"}
                                                     className={cn(
-                                                        "w-[180px] justify-start text-left font-normal",
+                                                        "w-full justify-start text-left font-normal",
                                                         !date && "text-muted-foreground"
                                                     )}
                                                 >
@@ -168,7 +168,7 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
                                     <FormLabel>Initial Buy In</FormLabel>
                                     <FormControl >
                                         <Select value={field.value} onValueChange={field.onChange}>
-                                            <SelectTrigger className="w-[180px]">
+                                            <SelectTrigger className="w-full">
                                                 <SelectValue  className="mt-0" placeholder="300" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -182,16 +182,15 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
                                 </FormItem>
                             )}
                         />
-                        
                         <FormField
                             control={form.control}
                             name="players"
                             render={() => (
                                 <FormItem>
-                                    <div className="mb-4">
+                                    <div className="text-center my-4">
                                         <FormLabel className="text-base">Add Players</FormLabel>
                                     </div>
-                                    <div className="flex flex-col flex-wrap max-h-[80px]">
+                                    <div className="grid grid-cols-3 md:grid-cols-4 gap-y-3">
                                         {players?.map((item) => (
                                             <FormField
                                                 key={item.player_id}
@@ -202,7 +201,7 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
                                                     return (
                                                         <FormItem
                                                             key={item.player_id}
-                                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                                            className="flex flex-row items-end space-x-3 space-y-0"
                                                             
                                                         >
                                                             <FormControl className="mb-1">
@@ -220,7 +219,7 @@ export const NewGameModal: React.FC<INewGameModalProps> = ({
                                                                     {...field}
                                                                 />
                                                             </FormControl>
-                                                            <FormLabel className="font-normal">
+                                                            <FormLabel className="font-normal  text-xl">
                                                                 {item.full_name}
                                                             </FormLabel>
                                                         </FormItem>

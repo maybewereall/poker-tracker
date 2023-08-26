@@ -57,40 +57,40 @@ export const NewGameForm: React.FC<NewGameFormProps> = ({ players }) => {
                                     Add players to the game
                                 </FormDescription>
                             </div>
-                            <div className="grid grid-cols-10 space-x-1 max-h-[150px]">
-                            {players.map((item) => (
-                                <FormField
-                                    key={item.player_id}
-                                    control={form.control}
-                                    name="items"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={item.player_id}
-                                                className="flex flex-row items-start space-x-3 space-y-0"
-                                            >
-                                                <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(item.player_id)}
-                                                        onCheckedChange={(checked) => {
-                                                            return checked
-                                                                ? field.onChange([...field.value, item.player_id])
-                                                                : field.onChange(
-                                                                    field.value?.filter(
-                                                                        (value) => value !== item.player_id
+                            <div className="grid grid-cols-3 space-x-1 max-h-[150px]">
+                                {players.map((item) => (
+                                    <FormField
+                                        key={item.player_id}
+                                        control={form.control}
+                                        name="items"
+                                        render={({ field }) => {
+                                            return (
+                                                <FormItem
+                                                    key={item.player_id}
+                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                >
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value?.includes(item.player_id)}
+                                                            onCheckedChange={(checked) => {
+                                                                return checked
+                                                                    ? field.onChange([...field.value, item.player_id])
+                                                                    : field.onChange(
+                                                                        field.value?.filter(
+                                                                            (value) => value !== item.player_id
+                                                                        )
                                                                     )
-                                                                )
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="font-normal">
-                                                    {item.full_name}
-                                                </FormLabel>
-                                            </FormItem>
-                                        )
-                                    }}
-                                />
-                            ))}
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal">
+                                                        {item.full_name}
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )
+                                        }}
+                                    />
+                                ))}
                             </div>
                             {/* <FormMessage /> */}
                         </FormItem>
