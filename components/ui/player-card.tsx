@@ -43,29 +43,24 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
             ) : (
             <div>
                 <div>Buy In: 
-                    <span className="text-lg font-bold mx-1 pl-1">
                     {item.buy_in.length > 0 ? (
-                        <div className="inline">
+                        <>
                             {item.buy_in.map((buyIn) => (
-                                <span key={(buyIn.timestamp).toString()} className="top-up-val font-bold text-lg mx-1 pl-1"> {(buyIn.amount).toString()}</span>
+                                <span key={(buyIn.timestamp).toString()} className="top-up-val font-bold text-lg"> {(buyIn.amount).toString()}</span>
                             ))}
-                        </div>
+                        </>
                     ) : (
-                        <div className="inline font-bold text-lg mx-1">0</div>
+                        <div className="top-up-val font-bold text-lg">0</div>
                     )}    
-                    </span>
                 </div>
                 <div>
                     Cash Out:
-                    <span className="text-lg font-bold mx-1 pl-1">0</span>
+                    <span className="top-up-val font-bold text-lg">0</span>
                 </div>
             </div>
 
             )}
             <div className="mt-4">
-                    {/* <div className="p-6 text-center font-bold text-3xl">
-                        {item.cash_out_amount ? item.cash_out_amount : ("-")}
-                    </div> */}
                 {!cashedOut && (<div className="flex w-full gap-4">
                     <Button variant="outline" className="" onClick={() => handleModal(
                         {
