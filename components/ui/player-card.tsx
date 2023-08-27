@@ -42,7 +42,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
                 </div>
             ) : (
             <div>
-                <div>Buy In: 
+                <div><span className="pr-1">Buy In: </span>
                     {item.buy_in.length > 0 ? (
                         <>
                             {item.buy_in.map((buyIn) => (
@@ -50,11 +50,11 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
                             ))}
                         </>
                     ) : (
-                        <div className="top-up-val font-bold text-lg">0</div>
+                        <span className="top-up-val font-bold text-lg">0</span>
                     )}    
                 </div>
                 <div>
-                    Cash Out:
+                    <span className="pr-1">Cash Out:</span>
                     <span className="top-up-val font-bold text-lg">0</span>
                 </div>
             </div>
@@ -79,7 +79,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
                         },
                         'buyIn',
                         true
-                    )}>Top Up</Button>
+                    )}>Buy In</Button>
                 </div>)}
             </div>
         </div>

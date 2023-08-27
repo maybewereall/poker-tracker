@@ -16,7 +16,6 @@ model Players {
 
   gameParticipants GameParticipants[]
   playerStatistics PlayerStatistics?
-  gameStatistics   GameStatistics[]
 }
 
 model Games {
@@ -24,6 +23,7 @@ model Games {
   game_date DateTime
   location  String
   active    Boolean @default(true)
+  rake      Int @default(0)
 
   gameParticipants GameParticipants[]
   gameStatistics   GameStatistics[]
@@ -55,17 +55,14 @@ model PlayerStatistics {
 }
 
 model GameStatistics {
-  game_stats_id     Int @id @default(autoincrement())
-  game_id           Int
-  player_id         Int
+  game_id           Int @id @unique
   buy_ins           Int
   cash_outs         Int
-  profit            Int
+  rake              Int
+  result            Int
 
-  player Players @relation(fields: [player_id], references: [player_id])
   game   Games   @relation(fields: [game_id], references: [game_id])
 
-  @@index([player_id])
   @@index([game_id])
 }
 

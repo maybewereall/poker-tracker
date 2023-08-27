@@ -4,78 +4,90 @@ import * as z from "zod"
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
+  
+  import {
     Form,
     FormField,
     FormItem,
     FormLabel,
     FormControl,
-    FormMessage
-} from "@/components/ui/form";
-import { useState } from "react";
-
-const formSchema = z.object({
-    full_name: z.string().min(1),
-    email: z.string().min(5).email()
-});
+    FormMessage,
+  } from "@/components/ui/form";
+import { Players } from "@prisma/client";
 
 interface IAddPlayerFormProps {
-    onSubmit: () => void;
+    onSubmit: (data: { playerId: string }) => void;
     onCancel: () => void;
     loading: boolean;
+    participants: number[];
 }
 
-const AddPlayerForm: React.FC<IAddPlayerFormProps> = ({ onSubmit, onCancel, loading }) => {
+const formSchema = z.object({
+    playerId: z.string().refine((val) => !Number.isNaN(parseInt(val))),
+});
+
+const AddPlayerForm: React.FC<IAddPlayerFormProps> = ({ onSubmit, onCancel, loading, participants }) => {
+    const [isMounted, setIsMounted] = useState(false);
+    const [players, setPlayers] = useState<Players[]>([]);
+
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            full_name: "",
-            email: ""
-        },
+        resolver: zodResolver(formSchema)
     });
+
+    useEffect(() => {
+        setIsMounted(true);
+        const getPlayers = async () => {
+            const response = await axios.get(`/api/players`);
+            setPlayers(response.data);
+          }
+          getPlayers();
+    }, []);
+
+    if (!isMounted) return null;
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
-                    name="full_name"
+                    name="playerId"
                     control={form.control}
-                    render={({field}) => (
-                        <FormItem className="mb-4">
-                            <FormLabel>Name</FormLabel>
+                    render={({ field }) => (
+                        <FormItem {...field}>
+                            <FormLabel>Select player</FormLabel>
                             <FormControl>
-                                <Input
-                                    disabled={loading}
-                                    placeholder="Full Name"
-                                    {...field}
-                                />
+                                <Select value={field.value} onValueChange={field.onChange}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {participants &&
+                                            players.filter((player) => {
+                                                return participants.indexOf(player.player_id) < 0
+                                            }).map((item) => {
+                                                return (
+                                                    <SelectItem key={item.player_id} value={String(item.player_id)}>{item.full_name}</SelectItem>
+                                                )
+                                            })
+                                        }
+                                        <SelectItem value="add-custom"><Plus width={14} height={14} className="inline mr-2" />Add New...</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <FormField
-                    name="email"
-                    control={form.control}
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input
-                                    disabled={loading}
-                                    type="email"
-                                    placeholder="Email"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <div className="pt-6 space-x-2 flex items-center justify-between w-full">
+                <div className="flex justify-between mt-4">
                     <Button type="button" disabled={loading} variant={"outline"} onClick={onCancel}>Cancel</Button>
                     <Button type="submit" disabled={loading}>Add</Button>
                 </div>

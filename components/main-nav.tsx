@@ -14,11 +14,6 @@ export function MainNav({
 
     const routes = [
         {
-            href: `/`,
-            label: "Home",
-            active: pathname === `/`
-        },
-        {
             href: `/players`,
             label: "Players",
             active: pathname === `/players`

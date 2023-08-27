@@ -27,19 +27,21 @@ export interface IGameParticipantData {
 
 function useGameData(gameId: string, refreshKey: number) {
   const [gameData, setGameData] = useState<IGameResponseData>();
+  const [allCashedOut, setAllCashedOut] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     axios.get(`/api/game/${gameId}`)
       .then(response => {
         setGameData(response.data);
+        setAllCashedOut(response.data.gameParticipants.every((player: IGameParticipantData) => player.cash_out_amount >= 0));
       })
       .catch(error => {
         setError(error);
       });
   }, [gameId, refreshKey]);
 
-  return { gameData, error };
+  return { gameData, allCashedOut, error };
 }
 
 export default useGameData;
