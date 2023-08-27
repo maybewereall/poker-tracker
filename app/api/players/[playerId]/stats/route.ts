@@ -1,4 +1,4 @@
-import { addPlayerStatistics } from '@/services/playerStatisticsService';
+// import { addPlayerStatistics } from '@/services/playerStatisticsService';
 
 import { NextResponse } from 'next/server';
 
@@ -9,11 +9,11 @@ export async function POST(
     const body = await req.json();
     const { playerId, buyInAmount, cashOutAmount } = body;
 
-    try {
-      const newStatistics = await addPlayerStatistics({playerId, buyInAmount, cashOutAmount});
-      return NextResponse.json(newStatistics)
-    } catch (error) {
-      console.error('Error adding player statistics:', error);
-      return new NextResponse('An error occurred while adding player statistics.', { status: 500 });
-    }
+    // try {
+    //   const newStatistics = await addPlayerStatistics({playerId, buyInAmount, cashOutAmount});
+    //   return NextResponse.json(newStatistics)
+    // } catch (error) {
+    //   console.error('Error adding player statistics:', error);
+    //   return new NextResponse('An error occurred while adding player statistics.', { status: 500 });
+    // }
 }

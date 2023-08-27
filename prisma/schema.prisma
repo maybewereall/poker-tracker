@@ -23,6 +23,7 @@ model Games {
   game_id   Int      @id @default(autoincrement())
   game_date DateTime
   location  String
+  active    Boolean @default(true)
 
   gameParticipants GameParticipants[]
   gameStatistics   GameStatistics[]

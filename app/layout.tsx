@@ -4,7 +4,6 @@ import { Dosis } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 
 import { ToasterProvider } from '@/providers/toaster-provider';
-import { ModalProvider } from '@/providers/modal-provider';
 
 import Container from '@/components/ui/container';
 import { Navbar } from '@/components/navbar';
@@ -25,7 +24,6 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={font.className}>
-          <ModalProvider />
           <ToasterProvider />
           <Navbar />
           <Container>

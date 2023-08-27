@@ -57,7 +57,7 @@ const AddGamePlayerModal: React.FunctionComponent<IAddGamePlayerProps> = ({
 
   const handleModalSubmit = async (data: { playerId: string }) => {
     try {
-        const response = await axios.post(`/api/game/${gameId}/add-player`, data);
+        // const response = await axios.post(`/api/game/${gameId}/add-player`, data);
         onClose();
     } catch (error: any) {
         console.log(error);
