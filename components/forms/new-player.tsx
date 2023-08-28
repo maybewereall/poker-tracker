@@ -31,7 +31,7 @@ const NewPlayerForm: React.FC<INewPlayerFormProps> = ({ onSubmit, onCancel, load
         resolver: zodResolver(formSchema),
         defaultValues: {
             full_name: "",
-            email: ""
+            email: "demo@email.com"
         },
     });
 

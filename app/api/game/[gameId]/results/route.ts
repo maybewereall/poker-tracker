@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 
 export async function GET(
-    req:Request,
+    req: Request,
     { params }: { params: { gameId: string } }
 ) {
     const gamesResults = await prismadb.gameParticipants.findMany({
@@ -40,6 +40,7 @@ export async function POST(
     const gameId = Number(params.gameId);
 
     try {
+        // UPDATE GAME STATISTICS
         const existingGameStatistics = await prismadb.gameStatistics.findUnique({
             where: { game_id: gameId }
         });
@@ -50,33 +51,13 @@ export async function POST(
 
         let totalBuyIns = 0;
         let totalCashOuts = 0;
-        const participantUpdates = [];
+        let gameStatistics;
 
         for (const result of results) {
-            try {
-                participantUpdates.push(
-                    prismadb.gameParticipants.update({
-                        where: { player_id: result.playerId, participant_id: result.participantId, game_id: gameId },
-                        data: { cash_out_amount: result.cashOutAmount }
-                    })
-                );
-            } catch (error: any) {
-                console.log("[GAME_PARTICIPANT_UPDATE_ERROR]", error);
-                return new NextResponse("Error updating game participant", { status: 500 });
-            }
-
             totalBuyIns += result.buyIns;
             totalCashOuts += result.cashOutAmount;
         }
 
-        try {
-            await prismadb.$transaction(participantUpdates);
-        } catch (error: any) {
-            console.log("[TRANSACTION_ERROR]", error);
-            return new NextResponse("Error executing transaction", { status: 500 });
-        }
-
-        let gameStatistics;
         try {
             gameStatistics = await prismadb.gameStatistics.create({
                 data: {
@@ -92,6 +73,36 @@ export async function POST(
             return new NextResponse("Error creating game statistics", { status: 500 });
         }
 
+        // UPDATE PLAYER STATISTICS
+        const playerUpdates = [];
+
+        for (const result of results) {
+            playerUpdates.push(
+                prismadb.playerStatistics.upsert({
+                    where: { player_id: result.playerId },
+                    update: {
+                        total_games_played: { increment: 1 },
+                        total_buy_ins: { increment: result.buyIns },
+                        total_cash_outs: { increment: result.cashOutAmount }
+                    },
+                    create: {
+                        player_id: result.playerId,
+                        total_games_played: 1,
+                        total_buy_ins: result.buyIns,
+                        total_cash_outs: result.cashOutAmount
+                    }
+                })
+            );
+        }
+
+        try {
+            await prismadb.$transaction(playerUpdates);
+        } catch (error: any) {
+            console.log("[PLAYER_STATISTICS_UPSERT_ERROR]", error);
+            return new NextResponse("Error upserting player statistics", { status: 500 });
+        }
+
+        // SET GAME ACTIVE TO FALSE
         try {
             await prismadb.games.update({
                 where: {

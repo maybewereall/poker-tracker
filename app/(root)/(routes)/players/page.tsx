@@ -7,22 +7,27 @@ import prismadb from "@/lib/prismadb";
 
 
 export default async function PlayerPage() {
-  const players = await prismadb.players.findMany({
+ 
+  const playersWithStatistics = await prismadb.players.findMany({
     include: {
       playerStatistics: true,
-      gameParticipants: true
+    },
+    orderBy: {
+      playerStatistics:{
+        total_games_played: 'desc'
+      }
     }
   });
-
-  console.log(players);
-  const formattedPlayers: PlayerColumn[] = players.map((item) => ({
+  const formattedPlayers: PlayerColumn[] = playersWithStatistics.map((item) => ({
     player_id: item.player_id,
     full_name: item.full_name,
-    email: item.email,
     playerStatistics: item.playerStatistics,
-    date_joined: format(item.date_joined, "MMM do, yyyy"),
-    total_games: item.gameParticipants.length
-  }))
+    total_games: item.playerStatistics?.total_games_played || 0,
+    total_buy_in: item.playerStatistics?.total_buy_ins || 0,
+    total_cash_out: item.playerStatistics?.total_cash_outs || 0,
+    profit: item.playerStatistics ? item.playerStatistics.total_cash_outs - item.playerStatistics.total_buy_ins : 0,
+  }));
+
   return (
     <div className="flex-col w-full max-w-[800px] mx-auto">
         <div className="flex-1 space-y-4 p-8 pt-6">

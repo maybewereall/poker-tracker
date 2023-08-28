@@ -59,8 +59,8 @@ const CashOutForm: React.FC<ICashOutModalProps> = ({
                     )}
                 />
                 <div className="flex justify-between mt-4">
-                    <Button variant="outline" type="button" onClick={onCancel}>Cancel</Button>
-                    <Button variant="destructive" type="submit">Confirm</Button>
+                    <Button variant="outline" type="button" disabled={loading} onClick={onCancel}>Cancel</Button>
+                    <Button variant="destructive" type="submit" disabled={loading}>Confirm</Button>
                 </div>
             </form>
         </Form>

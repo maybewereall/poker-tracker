@@ -13,5 +13,5 @@ export const formatter = new Intl.NumberFormat("en-US", {
 })
 
 export const colorByValue = (val: number) => {
-  return val < 0 ? "text-red-600" : "text-green-600";
+  return val < 0 ? "text-red-600" : val === 0 ? "text-muted-foreground" : "text-grenn-600";
 }

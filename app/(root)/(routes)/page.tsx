@@ -63,7 +63,7 @@ export default function Home() {
 				{playerList && <NewGameForm onSubmit={createGame} onCancel={() => setOpen(false)} players={playerList} loading={loading} />}
 			</Modal>
 			<div className="flex w-full h-full justify-center items-center">
-				<Button onClick={() => setOpen(true)} disabled={loading}>Start New Game</Button>
+				<Button onClick={() => setOpen(true)} disabled={loading}>{loading ? "Loading..." : "Start New Game"}</Button>
 			</div>
 		</>
 	)
