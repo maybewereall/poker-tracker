@@ -12,15 +12,16 @@ export default async function PlayerPage() {
       playerStatistics: true,
       gameParticipants: true
     }
-  })
+  });
+
+  console.log(players);
   const formattedPlayers: PlayerColumn[] = players.map((item) => ({
     player_id: item.player_id,
     full_name: item.full_name,
     email: item.email,
     playerStatistics: item.playerStatistics,
-    date_joined: format(item.date_joined, "MMM do, yyyy")
-    // total
-    // stats
+    date_joined: format(item.date_joined, "MMM do, yyyy"),
+    total_games: item.gameParticipants.length
   }))
   return (
     <div className="flex-col w-full max-w-[800px] mx-auto">

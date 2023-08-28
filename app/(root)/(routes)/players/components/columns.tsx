@@ -12,6 +12,7 @@ export type PlayerColumn = {
     email: string;
     playerStatistics: PlayerStatistics | null;
     date_joined: string;
+    total_games: number;
 }
 
 export const columns: ColumnDef<PlayerColumn>[] = [
@@ -30,6 +31,10 @@ export const columns: ColumnDef<PlayerColumn>[] = [
   {
     accessorKey: "date_joined",
     header: "Date Joined"
+  },
+  {
+    accessorKey: "total_games",
+    header: "Games"
   },
   {
     id: "actions",

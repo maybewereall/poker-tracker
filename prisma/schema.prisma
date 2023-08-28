@@ -45,7 +45,6 @@ model PlayerStatistics {
   total_games_played Int
   total_buy_ins      Int
   total_cash_outs    Int
-  net_profit         Int
   player             Players @relation(fields: [player_id], references: [player_id])
 }
 
