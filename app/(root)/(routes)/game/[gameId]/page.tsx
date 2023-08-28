@@ -39,6 +39,10 @@ export default function GamePage() {
     const router = useRouter();
     const { gameData, allCashedOut, error } = useGameData(gameId, refreshKey);
 
+    if(gameData && !gameData.active) {
+        router.push(`/game/${gameId}/results`);
+    }
+
 
     const handleModal = (playerData: IPlayerDataModel, modalType: 'buyIn' | 'cashOut', isOpen: boolean) => {
         setSelectedPlayer(playerData);
@@ -68,6 +72,20 @@ export default function GamePage() {
         } catch (error: any) {
             toast.error("Something went wrong");
             console.log(error);
+        }
+    }
+    const handleNewPlayerSubmit = async (data: {full_name: string, email: string}) => {
+        try {
+            setLoading(true);
+            const response = await axios.post('/api/players', {
+                ...data
+            });
+            toast.success("Player added");
+            setLoading(false);
+        } catch (error) {
+            toast.error("Something went wrong.")
+            setLoading(false);
+        } finally {
         }
     }
 
@@ -163,7 +181,7 @@ export default function GamePage() {
 
             <Modal title="Create Player" description="Add new player to the club" isOpen={openNewPlayerModal} onClose={() => setOpenNewPlayerModal(false)}>
                 <NewPlayerForm
-                    onSubmit={() => console.log("onSubmit")}
+                    onSubmit={handleNewPlayerSubmit}
                     onCancel={() => setOpenNewPlayerModal(false)}
                     loading={loading}
                 />

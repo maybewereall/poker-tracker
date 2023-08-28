@@ -15,13 +15,13 @@ import {
     FormMessage
 } from "@/components/ui/form";
 
-const formSchema = z.object({
+export const formSchema = z.object({
     full_name: z.string().min(1),
     email: z.string().min(5).email()
 });
 
 interface INewPlayerFormProps {
-    onSubmit: () => void;
+    onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>;
     onCancel: () => void;
     loading: boolean;
 }

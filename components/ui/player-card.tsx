@@ -16,7 +16,6 @@ interface PlayerCardProps {
 }
 
 export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashedOut }) => {
-    const isCashedOut = item.cash_out_amount > 0;
 
     const calculateBuyIn = (arr: {
         amount: number
@@ -32,7 +31,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
     const finalResult = cashOut - totalBuyIn;
 
     return (
-        <div className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3", isCashedOut && "bg-gray-100" )}>
+        <div className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3", cashedOut && "bg-gray-100" )}>
             <div className="font-bold text-xl text-center">{item.player.full_name}</div>
             {cashedOut ? (
                 <div>

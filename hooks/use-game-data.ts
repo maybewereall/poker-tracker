@@ -6,6 +6,7 @@ export interface IGameResponseData {
     game_date: string
     game_id: number
     location: string;
+    active: boolean;
 }
 
 export interface IGameParticipantData {
