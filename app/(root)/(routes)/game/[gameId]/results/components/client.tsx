@@ -21,11 +21,11 @@ const GameResultClient: React.FC<IGameResultClientProps> = ({
         <>
             <div className="flex items-center justify-between">
                 <Heading
-                    title={`Gaem Results`}
+                    title={`Game Results`}
                 />
             </div>
             <Separator />
-            <DataTable columns={columns} data={data} searchKey="full_name" />
+            <DataTable columns={columns} data={data} searchKey="player" />
         </>
     );
 };

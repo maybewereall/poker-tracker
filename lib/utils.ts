@@ -11,3 +11,7 @@ export const formatter = new Intl.NumberFormat("en-US", {
   currency: "MYR",
   currencyDisplay: 'narrowSymbol'
 })
+
+export const colorByValue = (val: number) => {
+  return val < 0 ? "text-red-600" : "text-green-600";
+}

@@ -7,8 +7,6 @@ import { toast } from "react-hot-toast";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import CashOutModal from "@/components/modals/cash-out-modal";
-import BuyInModal from "@/components/modals/buy-in-modal";
 import { Button } from "@/components/ui/button";
 import { IPlayerDataModel, PlayerCard } from "@/components/ui/player-card";
 
@@ -18,11 +16,13 @@ import { Modal } from "@/components/ui/modal";
 import NewPlayerForm from "@/components/forms/new-player";
 import AddPlayerForm from "@/components/forms/add-player";
 import AddRakeForm from "@/components/forms/add-rake";
+import BuyInForm from "@/components/forms/buy-in";
+import CashOutForm from "@/components/forms/cash-out";
 
 export default function GamePage() {
     const params = useParams();
     const [openCashOut, setOpenCashOut] = useState(false);
-    const [openTopUp, setOpenTopUp] = useState(false);
+    const [openBuyIn, setOpenBuyIn] = useState(false);
     const [openAddPlayerModal, setOpenAddPlayerModal] = useState(false);
     const [openFinishGame, setOpenFinishGame] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -44,10 +44,10 @@ export default function GamePage() {
     }
 
 
-    const handleModal = (playerData: IPlayerDataModel, modalType: 'buyIn' | 'cashOut', isOpen: boolean) => {
+    const handleOpenModal = (playerData: IPlayerDataModel, modalType: 'buyIn' | 'cashOut', isOpen: boolean) => {
         setSelectedPlayer(playerData);
         if (modalType === 'buyIn') {
-            setOpenTopUp(isOpen);
+            setOpenBuyIn(isOpen);
         } else if (modalType === 'cashOut') {
             setOpenCashOut(isOpen);
         }
@@ -55,7 +55,7 @@ export default function GamePage() {
 
     const handleCloseModal = (modalType: 'buyIn' | 'cashOut') => {
         if (modalType === 'buyIn') {
-            setOpenTopUp(false);
+            setOpenBuyIn(false);
         } else if (modalType === 'cashOut') {
             setOpenCashOut(false);
         }
@@ -89,7 +89,7 @@ export default function GamePage() {
         }
     }
 
-    const handleBuyInSubmit = async (data: { participant_id: number, amount: string, timestamp: number }) => {
+    const handleBuyInSubmit = async (data: { participant_id: number, amount: string, timestamp: string }) => {
         setLoading(true);
         try {
             const response = await axios.post(`/api/game/${params.gameId}/buy-in/${selectedPlayer.playerId}`, { ...data });
@@ -100,10 +100,13 @@ export default function GamePage() {
         }
         setLoading(false);
     }
-    const handleCashOutSubmit = async (data: { participant_id: number, amount: string }) => {
+    const handleCashOutSubmit = async (data: { amount: string }) => {
         setLoading(true);
         try {
-            const response = await axios.patch(`/api/game/${params.gameId}/cash-out`, { ...data });
+            const response = await axios.patch(`/api/game/${params.gameId}/cash-out`, { 
+                participant_id: selectedPlayer.participantId,
+                ...data
+            });
             toast.success("Player cashed out!");
             handleCloseModal('cashOut');
         } catch (error: any) {
@@ -121,10 +124,9 @@ export default function GamePage() {
             buyIns: player.buy_in.reduce((total, buyIn) => total + Number(buyIn.amount), 0),
             net_profit: player.cash_out_amount - player.buy_in.reduce((total, buyIn) => total + Number(buyIn.amount), 0)
         }));
-        console.log(results);
         try {
             setLoading(true);
-            await axios.post(`/api/game/${gameId}/complete`, {
+            await axios.post(`/api/game/${gameId}/results`, {
                 rake: data.rake,
                 results: results
             });
@@ -148,7 +150,7 @@ export default function GamePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                 {gameData &&
                     gameData.gameParticipants.filter(player => player.cash_out_amount < 0).map((player) =>
-                        <PlayerCard key={player.participant_id} item={player} handleModal={handleModal} />
+                        <PlayerCard key={player.participant_id} item={player} handleModal={handleOpenModal} />
                     )
                 }
             </div>
@@ -156,28 +158,27 @@ export default function GamePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                 {gameData &&
                     gameData.gameParticipants.filter(player => player.cash_out_amount >= 0).map((player) =>
-                        <PlayerCard key={player.participant_id} item={player} handleModal={handleModal} cashedOut />
+                        <PlayerCard key={player.participant_id} item={player} handleModal={handleOpenModal} cashedOut />
                     )
                 }
             </div>
 
-            <BuyInModal
-                isOpen={openTopUp}
-                onClose={() => handleCloseModal('buyIn')}
-                onSubmit={handleBuyInSubmit}
-                loading={loading}
-                playerName={selectedPlayer.playerName}
-                participantId={selectedPlayer.participantId}
-            />
-
-            <CashOutModal
-                isOpen={openCashOut}
-                onClose={() => handleCloseModal('cashOut')}
-                onSubmit={handleCashOutSubmit}
-                loading={loading}
-                playerName={selectedPlayer.playerName}
-                participantId={selectedPlayer.participantId}
-            />
+            <Modal title={`Cash out ${selectedPlayer.playerName}`} description="" isOpen={openCashOut} onClose={() => handleCloseModal('buyIn')}>
+                <CashOutForm
+                    onSubmit={handleCashOutSubmit}
+                    onCancel={() => handleCloseModal('cashOut')}
+                    loading={loading}
+                    participantId={selectedPlayer.participantId}
+                />
+            </Modal>
+            <Modal title={`Buy in for ${selectedPlayer.playerName}`} description="" isOpen={openBuyIn} onClose={() => handleCloseModal('buyIn')}>
+                <BuyInForm
+                    onSubmit={handleBuyInSubmit}
+                    onCancel={() => handleCloseModal("buyIn")}
+                    loading={loading}
+                    participantId={selectedPlayer.participantId}
+                />
+            </Modal>
 
             <Modal title="Create Player" description="Add new player to the club" isOpen={openNewPlayerModal} onClose={() => setOpenNewPlayerModal(false)}>
                 <NewPlayerForm

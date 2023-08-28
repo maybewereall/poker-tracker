@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from './cell-action';
+import { cn, colorByValue } from "@/lib/utils";
 
 export type GameResultColumn = {
   player: string;
@@ -13,19 +14,21 @@ export type GameResultColumn = {
 export const columns: ColumnDef<GameResultColumn>[] = [
   {
     accessorKey: "player",
-    header: "Player",
+    header: () => <div className="font-bold text-xl">Player</div>,
+    cell: ({ row }) => <div className="font-bold text-lg text-muted-foreground">{row.getValue("player")}</div>
   },
   {
     accessorKey: "buy_in",
-    header: "Buy Ins",
+    header: () => <div className="font-bold text-xl">Buy Ins</div>
   },
   {
     accessorKey: "cash_out",
-    header: "Cash Outs",
+    header: () => <div className="font-bold text-xl">Cash Outs</div>
   },
   {
     accessorKey: "result",
-    header: "Final"
+    header: () => <div className="font-bold text-xl">Profit</div>,
+    cell: ({ row }) => <div className={cn("font-bold", colorByValue(row.getValue("result")))}>{row.getValue("result")}</div>
   },
   {
     id: "actions",

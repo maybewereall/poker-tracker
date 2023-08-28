@@ -9,7 +9,8 @@ import prismadb from "@/lib/prismadb";
 export default async function PlayerPage() {
   const players = await prismadb.players.findMany({
     include: {
-      playerStatistics: true
+      playerStatistics: true,
+      gameParticipants: true
     }
   })
   const formattedPlayers: PlayerColumn[] = players.map((item) => ({
@@ -18,6 +19,8 @@ export default async function PlayerPage() {
     email: item.email,
     playerStatistics: item.playerStatistics,
     date_joined: format(item.date_joined, "MMM do, yyyy")
+    // total
+    // stats
   }))
   return (
     <div className="flex-col w-full max-w-[800px] mx-auto">
