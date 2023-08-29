@@ -21,10 +21,6 @@ export type PlayerColumn = {
 
 export const columns: ColumnDef<PlayerColumn>[] = [
   {
-    accessorKey: "player_id",
-    header: "ID",
-  },
-  {
     accessorKey: "full_name",
     header: "Name",
   },
@@ -32,13 +28,15 @@ export const columns: ColumnDef<PlayerColumn>[] = [
     accessorKey: "total_games",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Games
-          <ArrowUpDown className="ml-1 h-3 w-3" />
-        </Button>
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Games
+            <ArrowUpDown className="ml-1 h-3 w-3" />
+          </Button>
+        </div>
       )
     },
     cell: ({ row }) => <div className="text-center">{row.getValue("total_games")}</div>
@@ -47,28 +45,36 @@ export const columns: ColumnDef<PlayerColumn>[] = [
     accessorKey: "total_buy_in",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Buy Ins
-          <ArrowUpDown className="ml-1 h-3 w-3" />
-        </Button>
+          <div className="text-center">
+            <Button
+              variant="ghost"
+              className=" text-center"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+              Buy Ins
+              <ArrowUpDown className="ml-1 h-3 w-3" />
+            </Button>
+          </div>
       )
     },
-    cell: ({ row }) => <div className="text-center">{row.getValue("total_buy_in")}</div>
+    cell: ({ row }) => <div className="text-center">{row.getValue("total_buy_in")}</div>,
+    meta: {
+      align: 'center'
+    },
   },
   {
     accessorKey: "total_cash_out",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Cash out
-          <ArrowUpDown className="ml-1 h-3 w-3" />
-        </Button>
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Cash out
+            <ArrowUpDown className="ml-1 h-3 w-3" />
+          </Button>
+        </div>
       )
     },
     cell: ({ row }) => <div className="text-center">{row.getValue("total_cash_out")}</div>
@@ -77,13 +83,15 @@ export const columns: ColumnDef<PlayerColumn>[] = [
     accessorKey: "profit",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Profit
-          <ArrowUpDown className="ml-1 h-3 w-3" />
-        </Button>
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Profit
+            <ArrowUpDown className="ml-1 h-3 w-3" />
+          </Button>
+        </div>
       )
     },
     cell: ({ row }) => <div className={cn("font-bold text-center", colorByValue(row.getValue("profit")))}>{row.getValue("profit")}</div>

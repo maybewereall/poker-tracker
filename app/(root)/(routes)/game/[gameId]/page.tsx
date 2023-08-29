@@ -142,6 +142,7 @@ export default function GamePage() {
 
     return (
 
+        (gameData && !gameData.active) && (
         <div>
             <div className="flex justify-between w-auto mt-4 text-right mr-auto">
                 <div><Button onClick={() => setOpenFinishGame(true)} disabled={!allCashedOut}>Finish Game</Button></div>
@@ -203,6 +204,6 @@ export default function GamePage() {
                     loading={loading}
                 />
             </Modal>
-        </div>
+        </div>)
     )
 }

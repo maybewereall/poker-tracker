@@ -7,7 +7,16 @@ export async function GET(
     req: Request
 ) {
     try {
-        const players = await prismadb.players.findMany();
+        const players = await prismadb.players.findMany({
+            include: {
+                playerStatistics: true,
+            },
+            orderBy: {
+                playerStatistics: {
+                    total_games_played: 'desc'
+                }
+            }
+        });
         if(players) {
             return NextResponse.json(players);
         } else {

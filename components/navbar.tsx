@@ -27,7 +27,7 @@ export const Navbar = async () => {
 
     return ( 
         <div className="border-b fixed w-full bg-white">
-            <div className="flex h-16 items-center px-4 mx-auto max-w-7xl">
+            <div className="flex h-16 items-center px-4 mx-auto max-w-[800px]">
                 <Logo />
                 <MainNav className="mx-6" />
                 <div className="ml-auto flex items-center space-x-4">

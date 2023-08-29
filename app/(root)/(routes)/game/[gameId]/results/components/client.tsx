@@ -1,8 +1,5 @@
 "use client";
 
-import toast from 'react-hot-toast';
-import axios from 'axios';
-
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/ui/data-table";
@@ -15,6 +12,8 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
+
+import { cn, colorByValue } from "@/lib/utils";
 
 import { GameResultColumn, PlayerResultColumn, playerColumns } from "./columns";
 
@@ -34,7 +33,9 @@ const GameResultClient: React.FC<IGameResultClientProps> = ({
                     title={`Game Results`}
                 />
             </div>
-            <Table>
+            <Separator /> 
+
+            <Table className="mb-4">
                 <TableHeader>
                     <TableRow>
                     <TableHead className="w-[50px]">ID</TableHead>
@@ -50,15 +51,18 @@ const GameResultClient: React.FC<IGameResultClientProps> = ({
                         <TableCell>RM {gameData.buy_ins}</TableCell>
                         <TableCell>RM {gameData.cash_outs}</TableCell>
                         <TableCell>RM {gameData.rake}</TableCell>
-                        <TableCell>RM {gameData.result}</TableCell>
+                        <TableCell><span className={cn("font-bold", colorByValue(gameData.result))}>RM {gameData.result}</span></TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
-            <Separator />
+            <div className="flex items-center justify-between">
             <Heading
                     title={`Player Results`}
                 />
+            </div>
+            <Separator />
             <DataTable columns={playerColumns} data={playerData} searchKey="player" />
+            
         </>
     );
 };
