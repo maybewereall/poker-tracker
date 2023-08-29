@@ -6,16 +6,26 @@ import axios from 'axios';
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/ui/data-table";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "@/components/ui/table"
 
-
-import { GameResultColumn, columns } from "./columns";
+import { GameResultColumn, PlayerResultColumn, playerColumns } from "./columns";
 
 interface IGameResultClientProps {
-    data: GameResultColumn[];
+    playerData: PlayerResultColumn[];
+    gameData: GameResultColumn;
 }
 
 const GameResultClient: React.FC<IGameResultClientProps> = ({
-    data
+    playerData,
+    gameData
 }) => {
     return (
         <>
@@ -24,8 +34,31 @@ const GameResultClient: React.FC<IGameResultClientProps> = ({
                     title={`Game Results`}
                 />
             </div>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead className="w-[50px]">ID</TableHead>
+                    <TableHead>Buy Ins</TableHead>
+                    <TableHead>Cash Outs</TableHead>
+                    <TableHead>Rake</TableHead>
+                    <TableHead>Final</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow>
+                        <TableCell>{gameData.game_id}</TableCell>
+                        <TableCell>RM {gameData.buy_ins}</TableCell>
+                        <TableCell>RM {gameData.cash_outs}</TableCell>
+                        <TableCell>RM {gameData.rake}</TableCell>
+                        <TableCell>RM {gameData.result}</TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
             <Separator />
-            <DataTable columns={columns} data={data} searchKey="player" />
+            <Heading
+                    title={`Player Results`}
+                />
+            <DataTable columns={playerColumns} data={playerData} searchKey="player" />
         </>
     );
 };

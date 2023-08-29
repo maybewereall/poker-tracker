@@ -2,16 +2,26 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from './cell-action';
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown } from "lucide-react";
+
 import { cn, colorByValue } from "@/lib/utils";
 
-export type GameResultColumn = {
+export type PlayerResultColumn = {
   player: string;
   buy_in: number;
   cash_out: number;
   result: number;
 }
+export type GameResultColumn = {
+  game_id: number;
+  buy_ins: number;
+  cash_outs: number;
+  rake: number;
+  result: number;
+}
 
-export const columns: ColumnDef<GameResultColumn>[] = [
+export const playerColumns: ColumnDef<PlayerResultColumn>[] = [
   {
     accessorKey: "player",
     header: () => <div className="font-bold text-xl">Player</div>,
@@ -19,19 +29,72 @@ export const columns: ColumnDef<GameResultColumn>[] = [
   },
   {
     accessorKey: "buy_in",
-    header: () => <div className="font-bold text-xl">Buy Ins</div>
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Buy In
+          <ArrowUpDown className="ml-1 h-3 w-3" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "cash_out",
-    header: () => <div className="font-bold text-xl">Cash Outs</div>
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Cash Out
+          <ArrowUpDown className="ml-1 h-3 w-3" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "result",
-    header: () => <div className="font-bold text-xl">Profit</div>,
-    cell: ({ row }) => <div className={cn("font-bold", colorByValue(row.getValue("result")))}>{row.getValue("result")}</div>
+    cell: ({ row }) => <div className={cn("font-bold", colorByValue(row.getValue("result")))}>{row.getValue("result")}</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Profit
+          <ArrowUpDown className="ml-1 h-3 w-3" />
+        </Button>
+      )
+    },
   },
   {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />
+  }
+]
+
+export const gameColumns: ColumnDef<GameResultColumn>[] = [
+  {
+    accessorKey: 'gameId',
+    header: () => "ID"
+  },
+  {
+    accessorKey: 'buyIns',
+    header: () => "Buy Ins"
+  },
+  {
+    accessorKey: 'cashOuts',
+    header: () => "Cash Outs"
+  },
+  {
+    accessorKey: 'rake',
+    header: () => "Rake"
+  },
+  {
+    accessorKey: 'finalResult',
+    header: () => "Final"
   }
 ]

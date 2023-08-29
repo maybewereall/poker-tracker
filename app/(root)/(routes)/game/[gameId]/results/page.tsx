@@ -1,13 +1,13 @@
 "use client";
 
 import axios from 'axios'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from "next/navigation";
 import { Players, BuyIn } from '@prisma/client';
-import GameClient from './components/client';
-import { useEffect } from 'react';
 
-interface IGameResultsData {
+import GameClient from './components/client';
+
+interface IPlayerResultsData {
     buy_in: BuyIn[]
     cash_out_amount: number
     game_id: number
@@ -16,28 +16,38 @@ interface IGameResultsData {
     player_id: number
 }
 
+interface IGameResultData {
+    game_id: number;
+    buy_ins: number;
+    cash_outs: number;
+    rake: number;
+    result: number;
+}
+
 export default function GameResultPage() {
     const params = useParams();
-    const [gameResultData, setGameResultData] = useState<IGameResultsData[]>();
+    const [playerResultData, setPlayerResultData] = useState<IPlayerResultsData[]>();
+    const [gameResultData, setGameResultData] = useState<IGameResultData>();
     
     useEffect(() => {
         const fetchData = async () => {
             const response = await axios.get(`/api/game/${params.gameId}/results`);
-            setGameResultData(response.data);
+            setPlayerResultData(response.data.playerStats);
+            setGameResultData(response.data.gameStats);
         }
         fetchData();
     }, [])
-    const formattedGamesResults = gameResultData && gameResultData.map((item) => ({
+    const formattedPlayerResults = playerResultData && playerResultData.map((item) => ({
         player: item.player.full_name,
         buy_in: item.buy_in.reduce((total, buyIn) => Number(total) + Number(buyIn.amount), 0),
         cash_out: item.cash_out_amount,
         result: item.cash_out_amount - item.buy_in.reduce((total, buyIn) => Number(total) + Number(buyIn.amount), 0),
     }));
-    console.log(formattedGamesResults);
+    console.log(gameResultData);
     return (
         <div className="flex-col w-full max-w-[800px] mx-auto">
             <div className="flex-1 space-y-4 p-8 pt-6">
-                {formattedGamesResults && <GameClient data={formattedGamesResults} />}
+                {(formattedPlayerResults && gameResultData) && <GameClient playerData={formattedPlayerResults} gameData={gameResultData} />}
             </div>
         </div>
     )

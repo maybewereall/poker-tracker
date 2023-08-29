@@ -11,14 +11,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { GameResultColumn } from "./columns";
+import { PlayerResultColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
 // import { AlertModal } from "@/components/modals/alert-modal";
 
 interface CellActionProps {
-    data: GameResultColumn;
+    data: PlayerResultColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({

@@ -6,17 +6,25 @@ export async function GET(
     req: Request,
     { params }: { params: { gameId: string } }
 ) {
-    const gamesResults = await prismadb.gameParticipants.findMany({
+    const gameId = Number(params.gameId);
+
+    const gameStats = await prismadb.gameStatistics.findUnique({
         where: {
-            game_id: Number(params.gameId)
+            game_id: gameId
+        }
+    });
+
+    const playerStats = await prismadb.gameParticipants.findMany({
+        where: {
+            game_id: gameId
         },
         include: {
             buy_in: true,
             player: true
         }
     });
-    console.log(gamesResults);
-    return NextResponse.json(gamesResults);
+    
+    return NextResponse.json({gameStats, playerStats});
 }
 
 export async function POST(
