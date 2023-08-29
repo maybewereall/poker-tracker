@@ -2,14 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from './cell-action';
-import { PlayerStatistics } from "@prisma/client";
-import { cn, colorByValue } from "@/lib/utils";
 
+import { cn, colorByValue } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type PlayerColumn = {
     player_id: Number;
     full_name: string;
