@@ -1,6 +1,6 @@
 import { TransactionType } from "@/types/types";
 import LoadingIcon from "@/components/ui/loading-icon";
-import { ArrowRightFromLine } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import {
     Table,
@@ -28,19 +28,19 @@ const TransactionsModal: React.FC<ITransactionsModalProps> = ({
                 <TableHeader>
                 <TableRow>
                     <TableHead className="text-left">From</TableHead>
-                    <TableHead className="w-[140px]"></TableHead>
+                    <TableHead className="w-[80px] text-center"></TableHead>
                     <TableHead className="text-left">To</TableHead>
-                    <TableHead className="text-left">Amount (RM)</TableHead>
+                    <TableHead className="text-right w-[120px]">Amount (RM)</TableHead>
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {transactionData?.map((item) => {
+                {transactionData?.map((item, index) => {
                     return(
-                        <TableRow>
+                        <TableRow key={index}>
                             <TableCell>{item.from}</TableCell>
-                            <TableCell className="text-center w-[140px]"><ArrowRightFromLine /></TableCell>
+                            <TableCell className="text-center w-[80px]"><ArrowRight /></TableCell>
                             <TableCell>{item.to}</TableCell>
-                            <TableCell>{item.amount}</TableCell>
+                            <TableCell className="font-bold text-xl text-right w-[120px]">RM {item.amount}</TableCell>
                         </TableRow>
                     )
                 })}

@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Plus } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import AddPlayerForm from "@/components/forms/add-player";
 import AddRakeForm from "@/components/forms/add-rake";
 import BuyInForm from "@/components/forms/buy-in";
 import CashOutForm from "@/components/forms/cash-out";
+import EditBuyInForm from "@/components/forms/edit-buy-in";
 
 export default function GamePage() {
     const params = useParams();
@@ -44,7 +45,7 @@ export default function GamePage() {
     }
 
 
-    const handleOpenModal = (playerData: IPlayerDataModel, modalType: 'buyIn' | 'cashOut', isOpen: boolean) => {
+    const handleOpenModal = (playerData: IPlayerDataModel, modalType: 'buyIn' | 'cashOut' | 'editBuyIn', isOpen: boolean) => {
         setSelectedPlayer(playerData);
         if (modalType === 'buyIn') {
             setOpenBuyIn(isOpen);
@@ -53,7 +54,7 @@ export default function GamePage() {
         }
     }
 
-    const handleCloseModal = (modalType: 'buyIn' | 'cashOut') => {
+    const handleCloseModal = (modalType: 'buyIn' | 'cashOut' | 'editBuyIn') => {
         if (modalType === 'buyIn') {
             setOpenBuyIn(false);
         } else if (modalType === 'cashOut') {
@@ -85,7 +86,6 @@ export default function GamePage() {
         } catch (error) {
             toast.error("Something went wrong.")
             setLoading(false);
-        } finally {
         }
     }
 
@@ -156,10 +156,10 @@ export default function GamePage() {
         (gameData && gameData.active) && (
         <div>
             <div className="flex justify-between w-auto mt-4 text-right mr-auto">
-                <div>
-                    <Button onClick={() => setOpenFinishGame(true)} disabled={!allCashedOut}>Finish Game</Button>
-                    <Button onClick={onDeleteGame} variant="destructive">Delete Game</Button>
-                    </div>
+                <div className="flex space-x-2">
+                    <div><Button onClick={onDeleteGame} variant="destructive" className="p-1"><Trash /></Button></div>
+                    <div><Button onClick={() => setOpenFinishGame(true)} disabled={!allCashedOut}>Finish Game</Button></div>
+                </div>
                 <div><Button onClick={() => setOpenAddPlayerModal(true)}><Plus width={20} height={20} className="mr-1" />Add Player</Button></div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
@@ -194,7 +194,6 @@ export default function GamePage() {
                     participantId={selectedPlayer.participantId}
                 />
             </Modal>
-
             <Modal title="Create Player" description="Add new player to the club" isOpen={openNewPlayerModal} onClose={() => setOpenNewPlayerModal(false)}>
                 <NewPlayerForm
                     onSubmit={handleNewPlayerSubmit}
@@ -202,7 +201,6 @@ export default function GamePage() {
                     loading={loading}
                 />
             </Modal>
-
             <Modal title="Add Player" description="Add player to the game" isOpen={openAddPlayerModal} onClose={() => setOpenAddPlayerModal(false)}>
                 <AddPlayerForm
                     onSubmit={handleAddPlayerSubmit}

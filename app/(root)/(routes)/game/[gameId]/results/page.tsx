@@ -64,9 +64,8 @@ export default function GameResultPage() {
     }
     return (
         <div className="flex-col w-full max-w-[1200px] mx-auto">
-            <div><Button onClick={handleOpenTransactions}>View Transactions</Button></div>
             <div className="flex-1 space-y-4 py-6">
-                {(formattedPlayerResults && gameResultData) && <GameClient playerData={formattedPlayerResults} gameData={gameResultData} />}
+                {(formattedPlayerResults && gameResultData) && <GameClient playerData={formattedPlayerResults} gameData={gameResultData} showTransactions={handleOpenTransactions} />}
             </div>
             <Modal title="Transactions" description="" isOpen={openTransactions} onClose={handleCloseModal}>
                 <TransactionsModal loading={loading} transactionData={transactionData} />

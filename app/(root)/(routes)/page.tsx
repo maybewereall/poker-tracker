@@ -22,7 +22,7 @@ export default function Home() {
 			setLoading(true);
 			const response = await axios.post('/api/game', {
 				date: values.date,
-				initial_buyin: values.initial_buyin,
+				initial_buyin: Number(values.initial_buyin),
 				players: selectedPlayerData?.map((player) => ({
 					player_id: player.player_id,
 				})),

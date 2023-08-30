@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { BuyIn } from '@prisma/client';
 
 export interface IGameResponseData {
     gameParticipants: IGameParticipantData[]
@@ -14,10 +15,7 @@ export interface IGameParticipantData {
     game_id: number
     participant_id: number
     player_id: number
-    buy_in: {
-        amount: number
-        timestamp: Date
-    }[]
+    buy_in: BuyIn[]
     player: { 
         player_id: number
         full_name: string

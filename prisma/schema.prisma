@@ -61,7 +61,7 @@ model GameStatistics {
 
 model BuyIn {
   buy_in_id      Int              @id @default(autoincrement())
-  amount         Decimal
+  amount         Int
   timestamp      DateTime         @default(now())
   participant_id Int
   participant    GameParticipants @relation(fields: [participant_id], references: [participant_id])

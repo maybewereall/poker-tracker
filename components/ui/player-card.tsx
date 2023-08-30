@@ -1,7 +1,14 @@
+"use client";
+
+import { Trash } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
 import { IGameParticipantData } from "@/hooks/use-game-data";
 import { cn } from "@/lib/utils";
+import { BuyIn } from "@prisma/client";
+import { Modal } from "./modal";
+import EditBuyInForm from "../forms/edit-buy-in";
 
 export interface IPlayerDataModel {
     playerName: string;
@@ -12,7 +19,7 @@ export interface IPlayerDataModel {
 interface PlayerCardProps {
     item: IGameParticipantData;
     cashedOut?: boolean;
-    handleModal: (playerData: IPlayerDataModel, modalType: 'buyIn' | 'cashOut', isOpen: boolean) => void;
+    handleModal: (playerData: IPlayerDataModel, modalType: 'buyIn' | 'cashOut' | 'editBuyIn', isOpen: boolean) => void;
 }
 
 export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashedOut }) => {
@@ -31,7 +38,10 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
     const finalResult = cashOut - totalBuyIn;
 
     return (
-        <div className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3", cashedOut && "bg-gray-100" )}>
+        <div className={cn("border rounded-md border-cyan-800 flex flex-col justify-between p-3 relative", cashedOut && "bg-gray-100" )}>
+            <div className="absolute flex px-2 pt-2 gap-2 right-0 top-0">
+                <Trash className="w-4  h-4 cursor-pointer text-red-200" onClick={console.log} />
+            </div>
             <div className="font-bold text-xl text-center">{item.player.full_name}</div>
             {cashedOut ? (
                 <div>
@@ -45,7 +55,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
                     {item.buy_in.length > 0 ? (
                         <>
                             {item.buy_in.map((buyIn) => (
-                                <span key={(buyIn.timestamp).toString()} className="top-up-val font-bold text-lg"> {(buyIn.amount).toString()}</span>
+                                <span key={(buyIn.timestamp).toString()} className="top-up-val font-bold text-lg cursor-pointer"> {(buyIn.amount).toString()}</span>
                             ))}
                         </>
                     ) : (

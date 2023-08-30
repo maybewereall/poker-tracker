@@ -47,7 +47,7 @@ interface INewGameFormProps {
 }
 
 export const formSchema = z.object({
-    initial_buyin: z.string(),
+    initial_buyin: z.string().refine((val) => !Number.isNaN(parseInt(val, 10))),
     date: z.date(),
     players: z.array(z.string()).refine((value) => value.some((item) => item), {
         message: "You have to select at least one player.",
@@ -61,8 +61,6 @@ const NewGameForm: React.FC<INewGameFormProps> = ({
     loading,
     players
 }) => {
-    const [date, setDate] = useState<Date | undefined>(new Date);
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {

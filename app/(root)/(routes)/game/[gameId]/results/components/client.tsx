@@ -12,6 +12,7 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
+import { Button } from "@/components/ui/button";
 
 import { cn, colorByValue } from "@/lib/utils";
 
@@ -20,11 +21,13 @@ import { GameResultColumn, PlayerResultColumn, playerColumns } from "./columns";
 interface IGameResultClientProps {
     playerData: PlayerResultColumn[];
     gameData: GameResultColumn;
+    showTransactions: () => void;
 }
 
 const GameResultClient: React.FC<IGameResultClientProps> = ({
     playerData,
-    gameData
+    gameData,
+    showTransactions
 }) => {
     return (
         <>
@@ -32,6 +35,7 @@ const GameResultClient: React.FC<IGameResultClientProps> = ({
                 <Heading
                     title={`Game Results`}
                 />
+                 <div><Button onClick={showTransactions}>View Transactions</Button></div>
             </div>
             <Separator /> 
 
