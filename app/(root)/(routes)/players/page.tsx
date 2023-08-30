@@ -29,7 +29,7 @@ export default async function PlayerPage() {
   }));
 
   return (
-    <div className="flex-col w-full max-w-[800px] mx-auto">
+    <div className="flex-col w-full max-w-[1200px] mx-auto">
         <div className="flex-1 space-y-4 p-8 pt-6">
             <PlayerClient data={formattedPlayers}/>
         </div>

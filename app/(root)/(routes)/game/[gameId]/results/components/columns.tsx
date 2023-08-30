@@ -72,6 +72,7 @@ export const playerColumns: ColumnDef<PlayerResultColumn>[] = [
   },
   {
     id: "actions",
+    size: 50,
     cell: ({ row }) => <CellAction data={row.original} />
   }
 ]

@@ -34,7 +34,7 @@ export default function GamePage() {
         participantId: 0,
     });
 
-    let gameId = params.gameId as string;
+    const gameId = params.gameId as string;
     
     const router = useRouter();
     const { gameData, allCashedOut, error } = useGameData(gameId, refreshKey);
@@ -115,6 +115,17 @@ export default function GamePage() {
         }
         setLoading(false);
     }
+    const onDeleteGame = async () => {
+        try {
+            const response = await axios.get(`/api/game/${gameId}/delete`);
+            toast.success("Game deleted");
+            router.push('/');
+        } catch (error: any) {
+            toast.error("Something went wrong");
+            console.log("Delete Error: ", error);
+        }
+
+    }
 
     const handleFinishGame = async (data: { rake: number }) => {
         const results = gameData?.gameParticipants.map(player => ({
@@ -142,10 +153,13 @@ export default function GamePage() {
 
     return (
 
-        (gameData && !gameData.active) && (
+        (gameData && gameData.active) && (
         <div>
             <div className="flex justify-between w-auto mt-4 text-right mr-auto">
-                <div><Button onClick={() => setOpenFinishGame(true)} disabled={!allCashedOut}>Finish Game</Button></div>
+                <div>
+                    <Button onClick={() => setOpenFinishGame(true)} disabled={!allCashedOut}>Finish Game</Button>
+                    <Button onClick={onDeleteGame} variant="destructive">Delete Game</Button>
+                    </div>
                 <div><Button onClick={() => setOpenAddPlayerModal(true)}><Plus width={20} height={20} className="mr-1" />Add Player</Button></div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
