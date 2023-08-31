@@ -149,7 +149,7 @@ const NewGameForm: React.FC<INewGameFormProps> = ({
                             <div className="text-center my-4">
                                 <FormLabel className="text-base">Add Players</FormLabel>
                             </div>
-                            <div className="grid grid-cols-3 md:grid-cols-4 gap-y-3">
+                            <div className="grid grid-cols-3 md:grid-cols-4 gap-y-3 max-h-[120px] overflow-y-scroll">
                                 {players.map((item) => (
                                     <FormField
                                         key={item.player_id}
