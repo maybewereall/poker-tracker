@@ -33,7 +33,7 @@ const PlayerClient: React.FC<IPlayerClientProps> = ({
                 />
             </div>
             <Separator />
-            <DataTable columns={columns} data={data} searchKey="full_name" />
+            <DataTable columns={columns} data={data} searchKey="id" />
         </>
     );
 };

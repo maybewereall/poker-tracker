@@ -17,6 +17,11 @@ export function MainNav({
             href: `/players`,
             label: "Players",
             active: pathname === `/players`
+        },
+        {
+            href: `/game`,
+            label: "Games",
+            active: pathname === `/game`
         }
     ];
 

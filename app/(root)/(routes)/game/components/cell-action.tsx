@@ -44,6 +44,9 @@ export const CellAction: React.FC<CellActionProps> = ({
     //         setOpen(false);
     //     }
     // }
+    const onViewDetails = () => {
+        router.push(`/game/${String(data.id)}/results`);
+    }
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -56,13 +59,9 @@ export const CellAction: React.FC<CellActionProps> = ({
                 <DropdownMenuLabel>
                     Actions
                 </DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => null}>
+                <DropdownMenuItem onClick={onViewDetails}>
                     <Edit className="mr-2 h-4 w-4" />
-                    Update
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => null}>
-                    <Trash className="mr-2 h-4 w-4" />
-                    Delete
+                    View Details
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
