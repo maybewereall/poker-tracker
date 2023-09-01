@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from './cell-action';
 
-import { cn, colorByValue } from "@/lib/utils";
+import { cn, colorByValue, formatNumber } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 
@@ -74,7 +74,7 @@ export const columns: ColumnDef<PlayerColumn>[] = [
         </div>
       )
     },
-    cell: ({ row }) => <div className="text-center">{row.getValue("total_cash_out")}</div>
+    cell: ({ row }) => <div className="text-center">{Number(row.getValue("total_cash_out")).toLocaleString()}</div>
   },
   {
     accessorKey: "profit",
@@ -91,7 +91,7 @@ export const columns: ColumnDef<PlayerColumn>[] = [
         </div>
       )
     },
-    cell: ({ row }) => <div className={cn("font-bold text-center", colorByValue(row.getValue("profit")))}>{row.getValue("profit")}</div>
+    cell: ({ row }) => <div className="font-bold text-center">{formatNumber(row.getValue("profit"), true)}</div>
   },
   {
     id: "actions",
