@@ -28,7 +28,7 @@ export async function POST(
     try {
         const updatedParticipant = await prismadb.buyIn.create({
             data: {
-                amount,
+                amount: Number(amount),
                 timestamp: new Date(timestamp),
                 participant: {
                   connect: {
