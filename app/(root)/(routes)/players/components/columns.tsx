@@ -54,7 +54,7 @@ export const columns: ColumnDef<PlayerColumn>[] = [
           </div>
       )
     },
-    cell: ({ row }) => <div className="text-center">{row.getValue("total_buy_in")}</div>,
+    cell: ({ row }) => <div className="text-center">{formatNumber(row.getValue("total_buy_in"))}</div>,
     meta: {
       align: 'center'
     },
@@ -74,7 +74,7 @@ export const columns: ColumnDef<PlayerColumn>[] = [
         </div>
       )
     },
-    cell: ({ row }) => <div className="text-center">{Number(row.getValue("total_cash_out")).toLocaleString()}</div>
+    cell: ({ row }) => <div className="text-center">{formatNumber(row.getValue("total_cash_out"))}</div>
   },
   {
     accessorKey: "profit",

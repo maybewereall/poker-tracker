@@ -14,7 +14,7 @@ import {
   } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
 
-import { cn, colorByValue } from "@/lib/utils";
+import { cn, colorByValue, formatNumber } from "@/lib/utils";
 
 import { GameResultColumn, PlayerResultColumn, playerColumns } from "./columns";
 
@@ -52,10 +52,10 @@ const GameResultClient: React.FC<IGameResultClientProps> = ({
                 <TableBody>
                     <TableRow>
                         <TableCell>{gameData.game_id}</TableCell>
-                        <TableCell>RM {gameData.buy_ins}</TableCell>
-                        <TableCell>RM {gameData.cash_outs}</TableCell>
-                        <TableCell>RM {gameData.rake}</TableCell>
-                        <TableCell><span className={cn("font-bold", colorByValue(gameData.result))}>RM {gameData.result}</span></TableCell>
+                        <TableCell>RM {formatNumber(gameData.buy_ins)}</TableCell>
+                        <TableCell>RM {formatNumber(gameData.cash_outs)}</TableCell>
+                        <TableCell>RM {formatNumber(gameData.rake)}</TableCell>
+                        <TableCell><span className="font-bold">RM {formatNumber(gameData.result, true)}</span></TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

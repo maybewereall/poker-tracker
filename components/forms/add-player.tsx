@@ -69,7 +69,7 @@ const AddPlayerForm: React.FC<IAddPlayerFormProps> = ({ onSubmit, onCancel, load
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select..." />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent className="max-h-[200px]">
                                         {participants &&
                                             players.filter((player) => {
                                                 return participants.indexOf(player.player_id) < 0

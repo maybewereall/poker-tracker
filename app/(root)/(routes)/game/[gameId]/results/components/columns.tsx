@@ -5,7 +5,7 @@ import { CellAction } from './cell-action';
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 
-import { cn, colorByValue } from "@/lib/utils";
+import { cn, colorByValue, formatNumber } from "@/lib/utils";
 
 export type PlayerResultColumn = {
   player: string;
@@ -40,6 +40,7 @@ export const playerColumns: ColumnDef<PlayerResultColumn>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => <div>{formatNumber(row.getValue("buy_in"))}</div>,
   },
   {
     accessorKey: "cash_out",
@@ -54,10 +55,11 @@ export const playerColumns: ColumnDef<PlayerResultColumn>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => <div>{formatNumber(row.getValue("cash_out"))}</div>,
   },
   {
     accessorKey: "result",
-    cell: ({ row }) => <div className={cn("font-bold", colorByValue(row.getValue("result")))}>{row.getValue("result")}</div>,
+    cell: ({ row }) => <div className="font-bold">{formatNumber(row.getValue("result"), true)}</div>,
     header: ({ column }) => {
       return (
         <Button
@@ -84,18 +86,22 @@ export const gameColumns: ColumnDef<GameResultColumn>[] = [
   },
   {
     accessorKey: 'buyIns',
-    header: () => "Buy Ins"
+    header: () => "Buy Ins",
+    cell: ({ row }) => <div>{formatNumber(row.getValue("buyIns"))}</div>
   },
   {
     accessorKey: 'cashOuts',
-    header: () => "Cash Outs"
+    header: () => "Cash Outs",
+    cell: ({ row }) => <div>{formatNumber(row.getValue("cashOuts"))}</div>
   },
   {
     accessorKey: 'rake',
-    header: () => "Rake"
+    header: () => "Rake",
+    cell: ({ row }) => <div>{formatNumber(row.getValue("rake"))}</div>
   },
   {
     accessorKey: 'finalResult',
-    header: () => "Final"
+    header: () => "Final",
+    cell: ({ row }) => <div>{formatNumber(row.getValue("finalResult"), true)}</div>
   }
 ]
