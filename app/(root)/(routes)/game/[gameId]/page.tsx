@@ -26,9 +26,10 @@ export default function GamePage() {
     const [openBuyIn, setOpenBuyIn] = useState(false);
     const [openAddPlayerModal, setOpenAddPlayerModal] = useState(false);
     const [openFinishGame, setOpenFinishGame] = useState(false);
+    const [openEditBuyIn, setOpenEditBuyIn] = useState(false);
+    const [openNewPlayerModal, setOpenNewPlayerModal] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [openNewPlayerModal, setOpenNewPlayerModal] = useState(false);
     const [selectedPlayer, setSelectedPlayer] = useState<IPlayerDataModel>({
         playerName: "",
         playerId: 0,
@@ -61,6 +62,11 @@ export default function GamePage() {
             setOpenCashOut(false);
         }
         setRefreshKey(oldKey => oldKey + 1);
+    }
+
+    const handleEditBuyInModal = (playerData: IPlayerDataModel, isOpen: boolean) => {
+        setSelectedPlayer(playerData);
+        setOpenEditBuyIn(isOpen);
     }
 
     const handleAddPlayerSubmit = async (data: { playerId: string }) => {
@@ -125,6 +131,18 @@ export default function GamePage() {
             console.log("Delete Error: ", error);
         }
 
+    }
+
+    const handleEditBuyInSubmit = async (data: { amount: string, id: number }) => {
+        setLoading(true);
+        try {
+            const response = await axios.post(`/api/game/${params.gameId}/edit-buy-in/${data.id}`, { ...data });
+            setOpenEditBuyIn(false);
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong.")
+        }
+        setLoading(false);
     }
 
     const handleFinishGame = async (data: { rake: number }) => {

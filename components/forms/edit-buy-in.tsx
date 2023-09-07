@@ -25,6 +25,7 @@ interface IEditBuyInFormProps {
     }) => void;
     onCancel: () => void;
     loading: boolean;
+    buyIn: BuyIn;
 }
 
 const formSchema = z.object({
@@ -36,11 +37,13 @@ const EditBuyInForm: React.FC<IEditBuyInFormProps> = ({
     onSubmit,
     onCancel,
     loading,
+    buyIn,
 }) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-          amount: "300",
+          amount: String(buyIn.amount),
+          id: buyIn.buy_in_id
         },
     });
     return(
@@ -72,7 +75,6 @@ const EditBuyInForm: React.FC<IEditBuyInFormProps> = ({
                                 <Input
                                     disabled={loading}
                                     type="hidden"
-                                    placeholder="Top up amount"
                                     {...field}
                                 />
                             </FormControl>

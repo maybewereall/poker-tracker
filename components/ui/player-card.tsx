@@ -9,6 +9,10 @@ import { cn } from "@/lib/utils";
 import { BuyIn } from "@prisma/client";
 import { Modal } from "./modal";
 import EditBuyInForm from "../forms/edit-buy-in";
+import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useParams } from "next/navigation";
 
 export interface IPlayerDataModel {
     playerName: string;
@@ -24,6 +28,10 @@ interface PlayerCardProps {
 
 export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashedOut }) => {
 
+    const [openEditBuyIn, setOpenEditBuyIn] = useState(false);
+    const [currentBuyIn, setCurrentBuyIn] = useState<BuyIn>(item.buy_in[0]);
+    const params = useParams();
+
     const calculateBuyIn = (arr: {
         amount: number
         timestamp: Date
@@ -33,6 +41,22 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
         }, 0);
         return val;
     }
+    const handleEditBuyInModal = (buyin: BuyIn) => {
+        setCurrentBuyIn(buyin);
+        setOpenEditBuyIn(true)
+    }
+    
+    const handleEditBuyInSubmit = async (data: { amount: string, id: number }) => {
+        try {
+            const response = await axios.patch(`/api/game/${params.gameId}/buy-in/${data.id}`, { ...data });
+            toast.success("Buy in updated")
+            setOpenEditBuyIn(false);
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong.");
+        }
+    }
+
     const totalBuyIn = calculateBuyIn(item.buy_in);
     const cashOut = item.cash_out_amount !== -1 ? item.cash_out_amount : 0
     const finalResult = cashOut - totalBuyIn;
@@ -55,7 +79,13 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
                     {item.buy_in.length > 0 ? (
                         <>
                             {item.buy_in.map((buyIn) => (
-                                <span key={(buyIn.timestamp).toString()} className="top-up-val font-bold text-lg cursor-pointer"> {(buyIn.amount).toString()}</span>
+                                <span 
+                                    key={(buyIn.timestamp).toString()} 
+                                    className="top-up-val font-bold text-lg cursor-pointer"
+                                    onClick={() => handleEditBuyInModal(buyIn)}
+                                > 
+                                    {(buyIn.amount).toString()}
+                                </span>
                             ))}
                         </>
                     ) : (
@@ -91,6 +121,14 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
                     )}>Buy In</Button>
                 </div>)}
             </div>
+            <Modal title={`Edit Buy In for ${item.player.full_name}`} description="" isOpen={openEditBuyIn} onClose={() => setOpenEditBuyIn(false)}>
+                <EditBuyInForm
+                    onSubmit={handleEditBuyInSubmit}
+                    onCancel={() => setOpenEditBuyIn(false)}
+                    loading={false}
+                    buyIn={currentBuyIn}
+                />
+            </Modal>
         </div>
     );
 }
