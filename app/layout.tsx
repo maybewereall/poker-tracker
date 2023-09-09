@@ -7,6 +7,7 @@ import { ToasterProvider } from '@/providers/toaster-provider';
 
 import Container from '@/components/ui/container';
 import { Navbar } from '@/components/navbar';
+import AuthProvider from '@/providers/auth-provider';
 
 const font = Dosis({ subsets: ['latin'] })
 
@@ -21,16 +22,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={font.className}>
+    <html lang="en">
+      <body className={font.className}>
+        <AuthProvider>
           <ToasterProvider />
           <Navbar />
           <Container>
             {children}
           </Container>
-        </body>
-      </html>
-    </ClerkProvider>
+        </AuthProvider>
+      </body>
+    </html>
   )
 }
