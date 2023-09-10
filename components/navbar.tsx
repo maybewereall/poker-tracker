@@ -1,15 +1,3 @@
-// import * as React from 'react';
-
-// interface INavbarProps {
-// }
-
-// const Navbar: React.FC<INavbarProps> = (props) => {
-//   return (
-//     <div></div>
-//   );
-// };
-
-// export default Navbar;
 
 import { MainNav } from "./main-nav";
 import prismadb from "@/lib/prismadb";
@@ -18,10 +6,7 @@ import Logo from "@/components/ui/logo";
 import { SignInButton } from "@/components/ui/sign-in-button";
 
 export const Navbar = async () => {
-
-    // if(!userId) {
-    //     redirect("/sign-in");
-    // }
+    
 
     return ( 
         <div className="border-b fixed w-full bg-white">

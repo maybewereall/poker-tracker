@@ -8,13 +8,28 @@ datasource db {
   relationMode = "prisma"
 }
 
+model User {
+  user_id   Int      @id @unique @default(autoincrement())
+  googleId  String?  @unique
+  username  String   @unique
+  password  String
+  player_id Int?     @unique
+  player    Players?
+
+  @@index([player_id])
+}
+
 model Players {
   player_id        Int                @id @default(autoincrement())
+  user_id          Int?               @unique
   full_name        String
   email            String
   date_joined      DateTime
   gameParticipants GameParticipants[]
   playerStatistics PlayerStatistics?
+  user             User?              @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id])
 }
 
 model Games {

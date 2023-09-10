@@ -43,7 +43,7 @@ const PlayersGamePage: React.FunctionComponent<IPlayersGamePageProps> = (props) 
     }, [])
     return (
         <div className="flex-col w-full max-w-[1200px] mx-auto">
-        <div className="flex-1 space-y-4 p-8 pt-6">
+        <div className="flex-1 space-y-4 pt-6">
             <div className="flex items-center justify-between">
             <Heading
                     title={`Player Stats`}
