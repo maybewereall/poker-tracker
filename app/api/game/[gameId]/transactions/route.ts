@@ -25,7 +25,6 @@ export async function GET(
             gameStatistics: true
         },
     });
-    console.log(game);
 
     const balances = game?.gameParticipants.map(participant => {
         return {
@@ -42,7 +41,6 @@ export async function GET(
     const debtors = balances?.filter(participant => participant.balance < 0);
     const creditors = balances?.filter(participant => participant.balance > 0);
 
-    console.log({ debtors, creditors });
     let transactions: TransactionType[] = [];
 
     debtors?.sort((a, b) => a.balance - b.balance);
@@ -50,7 +48,6 @@ export async function GET(
 
     let creditorsSafe = creditors || [];
 
-    // console.log({debtors, creditors})
     debtors?.forEach(debtor => {
         while (debtor.balance < 0 && creditorsSafe.length > 0) {
             let creditor = creditorsSafe[0];
@@ -70,6 +67,5 @@ export async function GET(
             }
         }
     });
-    // console.log({ transactions });
     return NextResponse.json(transactions);
 }

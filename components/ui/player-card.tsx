@@ -52,7 +52,6 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({ item, handleModal, cashe
             toast.success("Buy in updated")
             setOpenEditBuyIn(false);
         } catch (error) {
-            console.log(error);
             toast.error("Something went wrong.");
         }
     }

@@ -6,14 +6,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Modal } from "@/components/ui/modal";
-import { Players } from "@prisma/client";
+import { Games, Players } from "@prisma/client";
 import NewGameForm from "@/components/forms/create-game";
 import { formSchema } from "@/components/forms/create-game";
+import ActiveGame from "./components/active-game";
 
 export default function Home() {
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 	const [playerList, setPlayerList] = useState<Players[]>();
+	const [activeGame, setActiveGame] = useState<Games>();
 	const [open, setOpen] = useState(false);
 
 	const createGame = async (values: z.infer<typeof formSchema>) => {
@@ -38,18 +40,22 @@ export default function Home() {
 	}
 
 	useEffect(() => {
-		async function fetchPlayers() {
+		const loadData = async () => {
+			setLoading(true);
 			try {
-				setLoading(true);
-				const response = await axios.get(`/api/players`);
-				setPlayerList(response.data);
-				setLoading(false);
+				const [playersResponse, activeGameResponse] = await Promise.all([
+					axios.get(`/api/players`),
+					axios.get(`/api/game/active`)
+				]);
+				setPlayerList(playersResponse.data);
+				setActiveGame(activeGameResponse.data);
 			} catch (error) {
 				console.log(error);
+			} finally {
 				setLoading(false);
 			}
-		}
-		fetchPlayers();
+		};
+		loadData();
 	}, []);
 
 	return (
@@ -62,7 +68,8 @@ export default function Home() {
 			>
 				{playerList && <NewGameForm onSubmit={createGame} onCancel={() => setOpen(false)} players={playerList} loading={loading} />}
 			</Modal>
-			<div className="flex w-full h-full justify-center items-center">
+			<div className="flex flex-col w-full h-full justify-center items-center">
+				{activeGame ? <ActiveGame game={activeGame} /> : <div>No Active game</div> }
 				<Button onClick={() => setOpen(true)} disabled={loading}>{loading ? "Loading..." : "Start New Game"}</Button>
 			</div>
 		</>

@@ -27,7 +27,6 @@ export default async function GamesPage() {
         result: item.result,
         active: item.game.active
     }));
-    console.log(formattedGames);
     return (
         <div className="flex-col w-full max-w-[1200px] mx-auto">
             <div className="flex-1 space-y-4 p-8 pt-6">

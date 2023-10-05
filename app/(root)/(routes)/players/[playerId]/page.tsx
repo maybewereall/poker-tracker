@@ -37,7 +37,6 @@ const PlayersGamePage: React.FunctionComponent<IPlayersGamePageProps> = (props) 
             setPlayerStats(stats.data.playerStats);
             setGameStats(stats.data.gameStats);
             playerProfit = playerStats ? (playerStats.total_cash_outs - playerStats.total_buy_ins) : 0;
-            console.log(stats.data);
         }
         fetchStats();
     }, [])
