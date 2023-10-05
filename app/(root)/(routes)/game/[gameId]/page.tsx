@@ -175,7 +175,7 @@ export default function GamePage() {
         <div>
             <div className="flex justify-between w-auto mt-4 text-right mr-auto">
                 <div className="flex space-x-2">
-                    <div><Button onClick={onDeleteGame} variant="destructive" className="p-1" disabled><Trash /></Button></div>
+                    <div><Button onClick={onDeleteGame} variant="destructive" className="p-1"><Trash /></Button></div>
                     <div><Button onClick={() => setOpenFinishGame(true)} disabled={!allCashedOut}>Finish Game</Button></div>
                 </div>
                 <div><Button onClick={() => setOpenAddPlayerModal(true)}><Plus width={20} height={20} className="mr-1" />Add Player</Button></div>
