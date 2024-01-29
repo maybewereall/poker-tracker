@@ -7,7 +7,7 @@ type Props = {
 }
 
 export default function ActiveGame({game}: Props) {
-    const dateTime = new Date(game.game_date);
+    // const dateTime = new Date(game.game_date);
   return (
     <div className="w-full text-center mb-12 border p-6 rounded-xl">
         <h3 className="text-2xl font-bold py-3">Active Game</h3>
