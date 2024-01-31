@@ -13,6 +13,7 @@ import { IPlayerDataModel, PlayerCard } from "@/components/ui/player-card";
 import useGameData from "@/hooks/use-game-data";
 
 import { Modal } from "@/components/ui/modal";
+import { AlertModal } from "@/components/modals/confirm-modal";
 import NewPlayerForm from "@/components/forms/new-player";
 import AddPlayerForm from "@/components/forms/add-player";
 import AddRakeForm from "@/components/forms/add-rake";
@@ -28,6 +29,7 @@ export default function GamePage() {
     const [openFinishGame, setOpenFinishGame] = useState(false);
     const [openEditBuyIn, setOpenEditBuyIn] = useState(false);
     const [openNewPlayerModal, setOpenNewPlayerModal] = useState(false);
+    const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const [loading, setLoading] = useState(false);
     const [selectedPlayer, setSelectedPlayer] = useState<IPlayerDataModel>({
@@ -175,7 +177,7 @@ export default function GamePage() {
         <div>
             <div className="flex justify-between w-auto mt-4 text-right mr-auto">
                 <div className="flex space-x-2">
-                    <div><Button onClick={onDeleteGame} variant="destructive" className="p-1"><Trash /></Button></div>
+                    <div><Button onClick={() => setOpenDeleteConfirm(true)} variant="destructive" className="p-1"><Trash /></Button></div>
                     <div><Button onClick={() => setOpenFinishGame(true)} disabled={!allCashedOut}>Finish Game</Button></div>
                 </div>
                 <div><Button onClick={() => setOpenAddPlayerModal(true)}><Plus width={20} height={20} className="mr-1" />Add Player</Button></div>
@@ -234,6 +236,13 @@ export default function GamePage() {
                     loading={loading}
                 />
             </Modal>
+            <AlertModal
+                isOpen={openDeleteConfirm}
+                onClose={() => null}
+                onConfirm={onDeleteGame}
+                loading={loading}
+                title="Delete Game?"
+            />
         </div>)
     )
 }
