@@ -32,7 +32,7 @@ interface PlayerSelectionModalProps {
 }
 
 export const formSchema = z.object({
-    player: z.string()
+    player: z.string().min(1)
 })
 
 const PlayerSelectionModal: React.FC<PlayerSelectionModalProps> = ({
@@ -99,7 +99,7 @@ const PlayerSelectionModal: React.FC<PlayerSelectionModalProps> = ({
 					)}
 				/>
 				<div className="flex justify-end mt-4">
-                    <Button type="submit" disabled={!form.formState.isValid}>Link</Button>
+                    <Button type="submit" disabled={form.formState.isValid}>Link</Button>
                 </div>
 			</form>
 		</Form>
