@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useUser } from '@clerk/clerk-react';
+
+import { usePlayerModal } from '@/hooks/use-player-modal';
+
 import { Modal } from "@/components/ui/modal";
+import PlayerSelectionModal from "@/components/modals/player-selection-modal";
 import { Games, Players } from "@prisma/client";
 import NewGameForm from "@/components/forms/create-game";
 import { formSchema } from "@/components/forms/create-game";
@@ -13,6 +18,8 @@ import ActiveGame from "./components/active-game";
 
 export default function Home() {
 	const router = useRouter();
+	const { user } = useUser();
+	const { isOpen, onOpen, onClose } = usePlayerModal();
 	const [loading, setLoading] = useState(false);
 	const [playerList, setPlayerList] = useState<Players[]>();
 	const [activeGame, setActiveGame] = useState<Games>();
@@ -56,10 +63,17 @@ export default function Home() {
 			}
 		};
 		loadData();
-	}, []);
+	}, [user]);
+	
+	useEffect(() => {
+		if (user) {
+			onOpen();
+		}
+	}, [user])
 
 	return (
 		<>
+			<PlayerSelectionModal isOpen={isOpen} onClose={onClose} />
 			<Modal
 				isOpen={open}
 				onClose={() => { setOpen(false) }}

@@ -11,6 +11,7 @@ datasource db {
 
 model Players {
   player_id        Int                @id @default(autoincrement())
+  googleId         String?            @unique
   full_name        String
   email            String
   date_joined      DateTime
