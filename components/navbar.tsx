@@ -11,7 +11,8 @@
 
 // export default Navbar;
 
-import { UserButton, auth } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import { MainNav } from "./main-nav";
 import prismadb from "@/lib/prismadb";

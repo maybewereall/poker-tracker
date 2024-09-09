@@ -1,5 +1,6 @@
 "use client";
 import * as z from "zod"
+import { useAuth, useUser } from '@clerk/nextjs'
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -17,6 +18,8 @@ export default function Home() {
 	const [playerList, setPlayerList] = useState<Players[]>();
 	const [activeGame, setActiveGame] = useState<Games>();
 	const [open, setOpen] = useState(false);
+	// const { isLoaded, userId, sessionId, getToken } = useAuth()
+	const { isLoaded, isSignedIn, user } = useUser()
 
 	const createGame = async (values: z.infer<typeof formSchema>) => {
 		const selectedPlayerData = playerList?.filter((player) => values.players.includes((player.player_id).toString()));
@@ -58,6 +61,8 @@ export default function Home() {
 		loadData();
 	}, []);
 
+	console.log(user);
+
 	return (
 		<>
 			<Modal
@@ -69,6 +74,12 @@ export default function Home() {
 				{playerList && <NewGameForm onSubmit={createGame} onCancel={() => setOpen(false)} players={playerList} loading={loading} />}
 			</Modal>
 			<div className="flex flex-col w-full h-full justify-center items-center space-y-16">
+				<div>
+					<p><strong>isLoaded</strong>: {isLoaded ? "true" : "false"}</p>
+					<p><strong>isSignedIn</strong>: {isSignedIn ? "true" : "false"}</p>
+					
+					{/* <p><strong>getToken</strong>: {getToken()}</p> */}
+				</div>
 				{activeGame ? <ActiveGame game={activeGame} /> : "" }
 				<Button onClick={() => setOpen(true)} disabled={loading}>{loading ? "Loading..." : "Start New Game"}</Button>
 			</div>
