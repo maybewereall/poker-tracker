@@ -61,8 +61,6 @@ export default function Home() {
 		loadData();
 	}, []);
 
-	console.log(user);
-
 	return (
 		<>
 			<Modal
@@ -74,12 +72,6 @@ export default function Home() {
 				{playerList && <NewGameForm onSubmit={createGame} onCancel={() => setOpen(false)} players={playerList} loading={loading} />}
 			</Modal>
 			<div className="flex flex-col w-full h-full justify-center items-center space-y-16">
-				<div>
-					<p><strong>isLoaded</strong>: {isLoaded ? "true" : "false"}</p>
-					<p><strong>isSignedIn</strong>: {isSignedIn ? "true" : "false"}</p>
-					
-					{/* <p><strong>getToken</strong>: {getToken()}</p> */}
-				</div>
 				{activeGame ? <ActiveGame game={activeGame} /> : "" }
 				<Button onClick={() => setOpen(true)} disabled={loading}>{loading ? "Loading..." : "Start New Game"}</Button>
 			</div>

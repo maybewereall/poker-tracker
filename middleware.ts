@@ -19,7 +19,7 @@ export default clerkMiddleware((auth, req: NextRequest) => {
   // Redirect them to the /onboading route to complete onboarding
   if (userId && !sessionClaims?.metadata?.onboardingComplete) {
     const onboardingUrl = new URL('/onboarding', req.url)
-    return NextResponse.redirect(onboardingUrl)
+    // return NextResponse.redirect(onboardingUrl)
   }
 
   // If the user is logged in and the route is protected, let them view.

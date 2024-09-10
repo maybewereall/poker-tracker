@@ -1,24 +1,26 @@
 'use server'
 
+import z from 'zod';
 import { auth, clerkClient } from '@clerk/nextjs/server'
+import { toast } from "react-hot-toast";
 
-export const completeOnboarding = async (formData: FormData) => {
-  const { userId } = auth()
+import { formSchema } from '@/components/forms/link-account';
+import axios from 'axios';
 
-  if (!userId) {
-    return { message: 'No Logged In User' }
-  }
+export const completeOnboarding = async (values: z.infer<typeof formSchema>) => {
 
   try {
-    const res = await clerkClient().users.updateUser(userId, {
-      publicMetadata: {
-        onboardingComplete: true,
-        applicationName: formData.get('applicationName'),
-        applicationType: formData.get('applicationType'),
-      },
-    })
-    return { message: res.publicMetadata }
-  } catch (err) {
-    return { error: 'There was an error updating the user metadata.' }
+    // setLoading(true);
+    const response = await axios.post(`/api/players/onboarding`, {
+      selected_player_id: values.selected_player_id,
+      loggedIn_email: values.loggedIn_email
+    });
+    toast.success("Player Onboarded");
+    // router.push(`/game/${response.data.game_id}`);
+    // setLoading(false);
+
+  } catch (error) {
+    toast.error("Something went wrong.")
+    // setLoading(false);
   }
 }

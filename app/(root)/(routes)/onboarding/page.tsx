@@ -1,88 +1,108 @@
 'use client'
 
-import * as React from 'react'
-import { useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
-import { completeOnboarding } from './_actions'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@radix-ui/react-select'
-import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Players } from '@prisma/client'
-import { useForm } from 'react-hook-form'
+import { useUser } from '@clerk/nextjs'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { SubmitHandler, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { toast } from "react-hot-toast"
 import axios from 'axios'
+import { Players } from '@prisma/client'
+
+
+import { Modal } from "@/components/ui/modal"
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import LoadingIcon from "@/components/ui/loading-icon"
 
 const formSchema = z.object({
-    playerId: z.string().refine((val) => !Number.isNaN(parseInt(val))),
-});
+    selected_player_id: z.string(),
+    loggedIn_email: z.string().email()
+})
 
 export default function OnboardingComponent() {
-    const [error, setError] = React.useState('')
     const { user } = useUser()
-    const router = useRouter()
-    const [isMounted, setIsMounted] = useState(false);
-    const [players, setPlayers] = useState<Players[]>([]);
+    const [isMounted, setIsMounted] = useState(false)
+    const [open, setOpen] = useState(true)
+    const [players, setPlayers] = useState<Players[]>([])
+    const [loading, setLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema)
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            selected_player_id: "",
+            loggedIn_email: user?.emailAddresses[0].emailAddress || "",
+        }
     });
 
-    const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const formData = new FormData();
-        formData.append('playerId', data.playerId);
-        const res = await completeOnboarding(formData);
-        if (res?.message) {
-            // Reloads the user's data from Clerk's API
-            await user?.reload()
-            router.push('/')
+    const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+        console.log("onSubmit function called", data);
+        setLoading(true)
+        console.log("submit")
+        try {
+            const response = await axios.patch('/api/players/onboarding', data)
+            console.log("Request successful", response.data);
+            toast.success("Player Onboarded")
+            setOpen(false)
+        } catch (error) {
+            console.error('Onboarding failed:', error)
+            toast.error("Something went wrong.")
         }
-        if (res?.error) {
-            setError(res?.error)
-        }
+        setLoading(false)
     }
 
-    // useEffect(() => {
-    //     setIsMounted(true);
-    //     const getPlayers = async () => {
-    //         try {
-    //             const response = await axios.get(`/api/players`);
-    //             setPlayers(response.data);
-                
-    //         } catch (err) {
-    //             return { error: 'Cannot get players' }
-    //         }
-    //     }
-    //     getPlayers();
-    //     console.log(players);
-    // }, []);
+    useEffect(() => {
+        setIsMounted(true)
+        const getPlayers = async () => {
+            try {
+                const response = await axios.get('/api/players')
+                setPlayers(response.data)
+            } catch (error) {
+                console.error('Failed to fetch players:', error)
+                toast.error("Failed to load players")
+            }
+        }
+        getPlayers()
+    }, []);
+
+    useEffect(() => {
+        if (user?.emailAddresses[0].emailAddress) {
+            form.setValue('loggedIn_email', user.emailAddresses[0].emailAddress);
+        }
+    }, [user, form]);
 
     if (!isMounted) return null;
+
+    console.log("Form values:", form.getValues());
+    console.log("Form errors:", form.formState.errors);
+
     return (
-        <div>
+        <Modal
+            isOpen={open}
+            title="Link Account"
+            description="Select your name to link your google login to this player"
+            onClose={() => setOpen(false)}
+        >
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div>Logged in as: {form.getValues().loggedIn_email}</div>
                     <FormField
-                        name="playerId"
+                        name="selected_player_id"
                         control={form.control}
                         render={({ field }) => (
-                            <FormItem {...field}>
-                                <FormLabel>Select player</FormLabel>
+                            <FormItem>
+                                <FormLabel>Select your account</FormLabel>
                                 <FormControl>
-                                    <Select value={field.value} onValueChange={field.onChange}>
+                                    <Select onValueChange={field.onChange} value={field.value}>
                                         <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Select..." />
                                         </SelectTrigger>
                                         <SelectContent className="max-h-[200px]">
-                                            {
-                                                players.map((item) => {
-                                                    return (
-                                                        <SelectItem key={item.player_id} value={String(item.player_id)}>{item.full_name}</SelectItem>
-                                                    )
-                                                })
-                                            }
-                                            <SelectItem value="add-custom"><Plus width={14} height={14} className="inline mr-2" />Add New...</SelectItem>
+                                            {players.map((item) => (
+                                                <SelectItem key={item.player_id} value={String(item.player_id)}>{item.full_name}</SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
@@ -90,8 +110,18 @@ export default function OnboardingComponent() {
                             </FormItem>
                         )}
                     />
+                    <Input 
+                        type="hidden" 
+                        {...form.register("loggedIn_email")} 
+                        value={form.watch('loggedIn_email')}
+                    />
+                    <div className="pt-6 space-x-2 flex items-center justify-end w-full">
+                        <Button type="submit" disabled={loading}>
+                            {loading ? <LoadingIcon /> : "Continue"}
+                        </Button>
+                    </div>
                 </form>
             </Form>
-        </div>
+        </Modal>
     )
 }
